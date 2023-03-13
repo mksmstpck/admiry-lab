@@ -31,3 +31,11 @@ func (c *UserCache) Set(key string, value interface{}, ctx context.Context) erro
 	}
 	return nil
 }
+
+func (c *UserCache) Delete(key string, ctx context.Context) error {
+	err := c.client.Del(ctx, key).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
