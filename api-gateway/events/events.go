@@ -39,27 +39,7 @@ type Users interface {
 	UserEmailGet(email string) (models.User, error)
 	UserUsernameGet(username string) (models.User, error)
 	UserIdGet(id int32) (models.User, error)
-	UserPost(user *models.User) error
+	UserPost(user *models.User) (models.User, error)
 	UserPut(user *models.User) error
 	UserDelete(id int32) error
-}
-
-type Permissions interface {
-	PermissionGet(id int32) (models.Permission, error)
-	PermissionPost(permission *models.Permission) error
-	PermissionPut(permission *models.Permission) error
-	PermissionDelete(id int32) error
-}
-
-type Roles interface {
-	RoleGet(id int32) (models.Role, error)
-	RolePost(role *models.Role) error
-	RolePut(role *models.Role) error
-	RoleDelete(id int32) error
-}
-
-type Events struct {
-	User       Users
-	Permission Permissions
-	Role       Roles
 }
