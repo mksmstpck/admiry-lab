@@ -1,72 +1,80 @@
 package events
 
 import (
+	"errors"
 	"time"
 
-	"github.com/bytedance/sonic"
 	"github.com/mksmstpck/to-rename/api-gateway/models"
 )
 
-type UserPublisher interface {
-	UserGet(id []byte) (models.User, error)
-	UserPost(user models.User) error
-	UserPut(user models.User) error
-	UserDelete(id []byte) error
+func (u User) UserEmailGet(email string) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-email-get", email, &res, time.Second)
+	if err != nil {
+		return models.User{}, 500, err
+	}
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
+	}
+	return res.Message, res.Status, nil
 }
 
-func (p Pub) UserGet(id []byte) (models.User, error) {
-	var user models.User
-	m, err := p.conn.Request("users-get", id, 10*time.Millisecond)
+func (u User) UserUsernameGet(username string) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-username-get", username, &res, time.Second)
 	if err != nil {
-		return user, err
+		return models.User{}, 500, err
 	}
-	sonic.Unmarshal(m.Data, &user)
-	return user, nil
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
+	}
+	return res.Message, res.Status, nil
 }
 
-func (p Pub) UserPost(user models.User) error {
-	var res models.Response
-	userBytes, err := sonic.Marshal(user)
+func (u User) UserIdGet(id int32) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-id-get", id, &res, time.Second)
 	if err != nil {
-		return err
+		return models.User{}, 500, err
 	}
-	m, err := p.conn.Request("users-post", userBytes, 10*time.Millisecond)
-	if err != nil {
-		return err
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
 	}
-	sonic.Unmarshal(m.Data, &res)
-	if res.Status == "ok" {
-		return nil
-	}
-	return err
+	return res.Message, res.Status, nil
 }
 
-func (p Pub) UserPut(user models.User) error {
-	var res models.Response
-	userBytes, err := sonic.Marshal(user)
+func (u User) UserPost(user *models.User) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-post", user, &res, time.Second)
 	if err != nil {
-		return err
+		return models.User{}, 500, err
 	}
-	m, err := p.conn.Request("users-put", userBytes, 10*time.Millisecond)
-	if err != nil {
-		return err
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
 	}
-	sonic.Unmarshal(m.Data, &res)
-	if res.Status == "ok" {
-		return nil
-	}
-	return err
+	return res.Message, res.Status, nil
 }
 
-func (p Pub) UserDelete(id []byte) error {
-	var res models.Response
-	m, err := p.conn.Request("users-delete", id, 10*time.Millisecond)
+func (u User) UserPut(user *models.User) (int32, error) {
+	var res models.Response[string]
+	err := u.conn.Request("users-put", user, &res, time.Second)
 	if err != nil {
-		return err
+		return 500, err
 	}
-	sonic.Unmarshal(m.Data, &res)
-	if res.Status == "ok" {
-		return nil
+	if res.Error != "" {
+		return res.Status, errors.New(res.Error)
 	}
-	return err
+	return res.Status, nil
+}
+
+func (u User) UserDelete(id int32) (int32, error) {
+	var res models.Response[string]
+	err := u.conn.Request("users-delete", id, &res, time.Second)
+	if err != nil {
+		return 500, err
+	}
+	if res.Error != "" {
+		return res.Status, errors.New(res.Error)
+	}
+	return res.Status, nil
 }

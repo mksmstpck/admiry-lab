@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mksmstpck/to-rename/api-gateway/config"
 	"github.com/mksmstpck/to-rename/api-gateway/events"
+	validator "github.com/mksmstpck/to-rename/api-gateway/handlers/validators"
 	handlers "github.com/mksmstpck/to-rename/api-gateway/handlers/web"
 	"github.com/nats-io/nats.go"
 )
@@ -24,8 +25,11 @@ func main() {
 
 	//starts echo
 	e := echo.New()
-	pub := events.NewPub(nc)
-	handlers := handlers.NewWeb(e, nc, pub)
+	e.Validator = validator.NewCustomeValidator()
+	userEvent := events.NewUserEvent(c)
+	roleEvent := events.NewRoleEvent(c)
+	permissionEvent := events.NewPermissionEvent(c)
+	handlers := handlers.NewHandlers(e, c, userEvent, roleEvent, permissionEvent)
 	handlers.All()
 	e.Logger.Fatal(e.Start(config.EchoUrl))
 }
