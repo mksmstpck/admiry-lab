@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	_ "github.com/lib/pq"
 
+	"github.com/mkskstpck/to-rename/user-service/cache"
 	"github.com/mkskstpck/to-rename/user-service/config"
 	"github.com/mkskstpck/to-rename/user-service/database"
 	"github.com/mkskstpck/to-rename/user-service/handlers"
@@ -41,7 +43,6 @@ func main() {
 		config.PSQLpass,
 		config.PSQLdb,
 	)
-	// open database
 	db, err := sql.Open("postgres", psqlConn)
 	if err != nil {
 		log.Print(err)
@@ -51,10 +52,17 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	log.Println("Connected!")
+	log.Println("postgres connected!")
+	// redis connection
+	ucache := cache.NewRedisCache(
+		config.RedisHost,
+		config.RedisPort,
+		config.RedisDB,
+		time.Second*time.Duration(config.RedisExpires))
+	log.Println("redis connected!")
 	// handle requests
 	user := database.NewUserDB(db)
-	handlers.NewHandler(c, user).HandleAll()
+	handlers.NewHandler(c, user, ucache).HandleAll()
 
 	<-make(chan int)
 }
