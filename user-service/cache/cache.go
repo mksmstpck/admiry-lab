@@ -8,9 +8,9 @@ import (
 )
 
 type Cache interface {
-	Get(key string, ctx context.Context) (interface{}, error)
-	Set(key string, value interface{}, ctx context.Context) error
-	Delete(key string, ctx context.Context) error
+	Get(key string, ctx context.Context) (interface{}, int32, error)
+	Set(key string, value interface{}, ctx context.Context) (int32, error)
+	Delete(key string, ctx context.Context) (int32, error)
 }
 
 type UserCache struct {
