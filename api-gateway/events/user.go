@@ -7,68 +7,74 @@ import (
 	"github.com/mksmstpck/to-rename/api-gateway/models"
 )
 
-func (u User) UserEmailGet(email string) (models.User, error) {
-	var user models.User
-	err := u.conn.Request("users-email-get", email, &user, time.Second)
+func (u User) UserEmailGet(email string) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-email-get", email, &res, time.Second)
 	if err != nil {
-		return user, err
+		return models.User{}, 500, err
 	}
-	return user, nil
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
+	}
+	return res.Message, res.Status, nil
 }
 
-func (u User) UserUsernameGet(username string) (models.User, error) {
-	var user models.User
-	err := u.conn.Request("users-username-get", username, &user, time.Second)
+func (u User) UserUsernameGet(username string) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-username-get", username, &res, time.Second)
 	if err != nil {
-		return user, err
+		return models.User{}, 500, err
 	}
-	return user, nil
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
+	}
+	return res.Message, res.Status, nil
 }
 
-func (u User) UserIdGet(id int32) (models.User, error) {
-	var user models.User
-	err := u.conn.Request("users-id-get", id, &user, time.Second)
+func (u User) UserIdGet(id int32) (models.User, int32, error) {
+	var res models.Response[models.User]
+	err := u.conn.Request("users-id-get", id, &res, time.Second)
 	if err != nil {
-		return user, err
+		return models.User{}, 500, err
 	}
-	return user, nil
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
+	}
+	return res.Message, res.Status, nil
 }
 
-func (u User) UserPost(user *models.User) error {
-	var res models.Response
+func (u User) UserPost(user *models.User) (models.User, int32, error) {
+	var res models.Response[models.User]
 	err := u.conn.Request("users-post", user, &res, time.Second)
 	if err != nil {
-		return err
+		return models.User{}, 500, err
 	}
-	if res.Status == "ok" {
-		return nil
-	} else {
-		return errors.New(res.Message)
+	if res.Error != "" {
+		return models.User{}, res.Status, errors.New(res.Error)
 	}
+	return res.Message, res.Status, nil
 }
 
-func (u User) UserPut(user *models.User) error {
-	var res models.Response
+func (u User) UserPut(user *models.User) (int32, error) {
+	var res models.Response[string]
 	err := u.conn.Request("users-put", user, &res, time.Second)
 	if err != nil {
-		return err
+		return 500, err
 	}
-	if res.Status == "ok" {
-		return nil
-	} else {
-		return errors.New(res.Message)
+	if res.Error != "" {
+		return res.Status, errors.New(res.Error)
 	}
+	return res.Status, nil
 }
 
-func (u User) UserDelete(id int32) error {
-	var res models.Response
+func (u User) UserDelete(id int32) (int32, error) {
+	var res models.Response[string]
 	err := u.conn.Request("users-delete", id, &res, time.Second)
 	if err != nil {
-		return err
+		return 500, err
 	}
-	if res.Status == "ok" {
-		return nil
-	} else {
-		return errors.New(res.Message)
+	if res.Error != "" {
+		return res.Status, errors.New(res.Error)
 	}
+	return res.Status, nil
 }

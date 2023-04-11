@@ -36,10 +36,10 @@ func NewRoleEvent(conn *nats.EncodedConn) *Role {
 }
 
 type Users interface {
-	UserEmailGet(email string) (models.User, error)
-	UserUsernameGet(username string) (models.User, error)
-	UserIdGet(id int32) (models.User, error)
-	UserPost(user *models.User) (models.User, error)
-	UserPut(user *models.User) error
-	UserDelete(id int32) error
+	UserEmailGet(email string) (models.User, int32, error)
+	UserUsernameGet(username string) (models.User, int32, error)
+	UserIdGet(id int32) (models.User, int32, error)
+	UserPost(user *models.User) (models.User, int32, error)
+	UserPut(user *models.User) (int32, error)
+	UserDelete(id int32) (int32, error)
 }
