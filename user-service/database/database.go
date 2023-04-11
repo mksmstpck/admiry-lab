@@ -17,12 +17,12 @@ func NewUserDB(database *sql.DB) *UserDB {
 }
 
 type Users interface {
-	UserFindOneId(ID int32) (models.User, error)
-	UserFindOneUsername(username string) (models.User, error)
-	UserFindOneEmail(email string) (models.User, error)
-	UserCreateOne(user models.User) error
-	UserUpdateOne(user models.User) error
-	UserDeleteOne(ID int32) error
+	UserFindOneId(ID int32) (models.User, int32, error)
+	UserFindOneUsername(username string) (models.User, int32, error)
+	UserFindOneEmail(email string) (models.User, int32, error)
+	UserCreateOne(user models.User) (int32, error)
+	UserUpdateOne(user models.User) (int32, error)
+	UserDeleteOne(ID int32) (int32, error)
 }
 
 type Database struct {
