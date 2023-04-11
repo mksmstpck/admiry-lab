@@ -14,36 +14,27 @@ func (h *Handlers) UserIdRead(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
 	}
-	u, err := h.user.UserIdGet(int32(idInt))
-	if u.ID == 0 {
-		return c.JSON(http.StatusNotFound, models.Message{Message: "user not found"})
-	}
+	u, code, err := h.user.UserIdGet(int32(idInt))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, models.Message{Message: "internal server error"})
+		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, u)
 }
 
 func (h *Handlers) UserUsernameRead(c echo.Context) error {
 	username := c.Param("username")
-	u, err := h.user.UserUsernameGet(username)
-	if u.ID == 0 {
-		return c.JSON(http.StatusNotFound, models.Message{Message: "user not found"})
-	}
+	u, code, err := h.user.UserUsernameGet(username)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, models.Message{Message: "internal server error"})
+		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, u)
 }
 
 func (h *Handlers) UserEmailRead(c echo.Context) error {
 	email := c.Param("email")
-	u, err := h.user.UserEmailGet(email)
-	if u.ID == 0 {
-		return c.JSON(http.StatusNotFound, models.Message{Message: "user not found"})
-	}
+	u, code, err := h.user.UserEmailGet(email)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, models.Message{Message: "internal server error"})
+		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, u)
 }
@@ -56,10 +47,11 @@ func (h *Handlers) UserCreate(c echo.Context) error {
 	if err := c.Validate(u); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Message{Message: err.Error()})
 	}
-	if err := h.user.UserPost(u); err != nil {
-		return c.JSON(http.StatusConflict, models.Message{Message: err.Error()})
+	user, code, err := h.user.UserPost(u)
+	if err != nil {
+		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
-	return c.JSON(http.StatusCreated, u)
+	return c.JSON(http.StatusCreated, user)
 }
 
 func (h *Handlers) UserUpdate(c echo.Context) error {
@@ -70,8 +62,10 @@ func (h *Handlers) UserUpdate(c echo.Context) error {
 	if err := c.Validate(u); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Message{Message: err.Error()})
 	}
-	if err := h.user.UserPut(u); err != nil {
-		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
+	code, err := h.user.UserPut(u)
+	if err != nil {
+		return c.JSON(int(code), models.Message{Message: err.Error()})
+
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }
@@ -82,8 +76,9 @@ func (h *Handlers) UserDelete(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
 	}
-	if err := h.user.UserDelete(int32(idInt)); err != nil {
-		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
+	code, err := h.user.UserDelete(int32(idInt))
+	if err != nil {
+		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }
