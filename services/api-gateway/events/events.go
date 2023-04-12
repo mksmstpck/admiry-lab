@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/mksmstpck/to-rename/api-gateway/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 	"github.com/nats-io/nats.go"
 )
 

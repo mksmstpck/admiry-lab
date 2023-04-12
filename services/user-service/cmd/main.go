@@ -8,11 +8,10 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
-
-	"github.com/mkskstpck/to-rename/user-service/cache"
-	"github.com/mkskstpck/to-rename/user-service/config"
-	"github.com/mkskstpck/to-rename/user-service/database"
-	"github.com/mkskstpck/to-rename/user-service/handlers"
+	"github.com/mkskstpck/to-rename/pkg/cache"
+	"github.com/mkskstpck/to-rename/services/user-service/config"
+	"github.com/mkskstpck/to-rename/services/user-service/database"
+	"github.com/mkskstpck/to-rename/services/user-service/handlers"
 	"github.com/nats-io/nats.go"
 )
 

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/mksmstpck/to-rename/api-gateway/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 func (u User) UserEmailGet(email string) (models.User, int32, error) {

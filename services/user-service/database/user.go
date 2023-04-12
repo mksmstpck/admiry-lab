@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/mkskstpck/to-rename/user-service/models"
-	"github.com/mkskstpck/to-rename/user-service/services"
+	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/to-rename/pkg/services"
 )
 
 func (d *UserDB) UserFindOneId(ID int32) (models.User, int32, error) {

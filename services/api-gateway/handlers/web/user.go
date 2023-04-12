@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mksmstpck/to-rename/api-gateway/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 func (h *Handlers) UserIdRead(c echo.Context) error {

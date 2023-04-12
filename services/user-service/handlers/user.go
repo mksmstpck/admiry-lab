@@ -4,7 +4,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/mkskstpck/to-rename/user-service/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 func (h *Handler) userIdRead() {

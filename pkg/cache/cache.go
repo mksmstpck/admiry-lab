@@ -13,7 +13,7 @@ type Cache interface {
 	Delete(key string, ctx context.Context) (int32, error)
 }
 
-type UserCache struct {
+type Cacher struct {
 	client  *redis.Client
 	host    string
 	port    string
@@ -21,8 +21,8 @@ type UserCache struct {
 	expires time.Duration
 }
 
-func NewRedisCache(host string, port string, db int, expires time.Duration) *UserCache {
-	return &UserCache{
+func NewRedisCache(host string, port string, db int, expires time.Duration) *Cacher {
+	return &Cacher{
 		client:  redis.NewClient(&redis.Options{Addr: host + ":" + port}),
 		host:    host,
 		port:    port,

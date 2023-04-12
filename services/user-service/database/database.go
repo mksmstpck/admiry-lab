@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com/mkskstpck/to-rename/user-service/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 type UserDB struct {

@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/mkskstpck/to-rename/user-service/models"
+	"github.com/mkskstpck/to-rename/pkg/models"
 	"github.com/redis/go-redis/v9"
 )
 
-func (c *UserCache) Get(key string, ctx context.Context) (interface{}, int32, error) {
+func (c *Cacher) Get(key string, ctx context.Context) (interface{}, int32, error) {
 	user := models.User{}
 	val, err := c.client.Get(ctx, key).Result()
 	if err == redis.Nil {
@@ -24,7 +24,7 @@ func (c *UserCache) Get(key string, ctx context.Context) (interface{}, int32, er
 	return user, 200, nil
 }
 
-func (c *UserCache) Set(key string, value interface{}, ctx context.Context) (int32, error) {
+func (c *Cacher) Set(key string, value interface{}, ctx context.Context) (int32, error) {
 	val, err := json.Marshal(value)
 	if err != nil {
 		return 500, err
@@ -36,7 +36,7 @@ func (c *UserCache) Set(key string, value interface{}, ctx context.Context) (int
 	return 200, nil
 }
 
-func (c *UserCache) Delete(key string, ctx context.Context) (int32, error) {
+func (c *Cacher) Delete(key string, ctx context.Context) (int32, error) {
 	err := c.client.Del(ctx, key).Err()
 	if err != nil {
 		return 500, err

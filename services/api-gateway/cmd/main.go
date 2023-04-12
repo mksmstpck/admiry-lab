@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/mksmstpck/to-rename/api-gateway/config"
-	"github.com/mksmstpck/to-rename/api-gateway/events"
-	validator "github.com/mksmstpck/to-rename/api-gateway/handlers/validators"
-	handlers "github.com/mksmstpck/to-rename/api-gateway/handlers/web"
+	"github.com/mkskstpck/to-rename/services/api-gateway/config"
+	"github.com/mkskstpck/to-rename/services/api-gateway/events"
+	validator "github.com/mkskstpck/to-rename/services/api-gateway/handlers/validators"
+	handlers "github.com/mkskstpck/to-rename/services/api-gateway/handlers/web"
 	"github.com/nats-io/nats.go"
 )
 

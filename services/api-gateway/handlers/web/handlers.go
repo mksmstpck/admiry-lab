@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/mksmstpck/to-rename/api-gateway/events"
 	"github.com/nats-io/nats.go"
+
+	"github.com/mkskstpck/to-rename/services/api-gateway/events"
 )
 
 type Handlers struct {

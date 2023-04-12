@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/mkskstpck/to-rename/user-service/cache"
-	"github.com/mkskstpck/to-rename/user-service/database"
+	"github.com/mkskstpck/to-rename/pkg/cache"
+	"github.com/mkskstpck/to-rename/services/user-service/database"
 	"github.com/nats-io/nats.go"
 )
 
@@ -12,7 +12,7 @@ type Handler struct {
 	cache cache.Cache
 }
 
-func NewHandler(conn *nats.EncodedConn, user *database.UserDB, cache *cache.UserCache) *Handler {
+func NewHandler(conn *nats.EncodedConn, user *database.UserDB, cache *cache.Cacher) *Handler {
 	return &Handler{
 		conn:  conn,
 		user:  user,
