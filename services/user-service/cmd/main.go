@@ -1,18 +1,13 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
-	"strconv"
 	"time"
 
 	_ "github.com/lib/pq"
-	"github.com/mkskstpck/to-rename/pkg/cache"
+	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/user-service/config"
 	"github.com/mkskstpck/to-rename/services/user-service/database"
 	"github.com/mkskstpck/to-rename/services/user-service/handlers"
-	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -23,42 +18,31 @@ func main() {
 	}
 
 	//nats connection
-	nc, err := nats.Connect(config.NatsUrl)
+	c, err := conectors.NewNats(config.NatsUrl)
 	if err != nil {
 		panic(err)
 	}
-	c, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
-	defer c.Close()
 
 	// postgres connection
-	port, err := strconv.Atoi(config.PSQLport)
-	if err != nil {
-		panic(err)
-	}
-	psqlConn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	db, err := conectors.NewPsql(
+		config.PSQLport,
 		config.PSQLhost,
-		port,
 		config.PSQLuser,
 		config.PSQLpass,
 		config.PSQLdb,
 	)
-	db, err := sql.Open("postgres", psqlConn)
 	if err != nil {
-		log.Print(err)
+		panic(err)
 	}
-	defer db.Close()
-	err = db.Ping()
-	if err != nil {
-		log.Print(err)
-	}
-	log.Println("postgres connected!")
+
 	// redis connection
-	ucache := cache.NewRedisCache(
+	ucache := conectors.NewCache(
 		config.RedisHost,
 		config.RedisPort,
 		config.RedisDB,
-		time.Second*time.Duration(config.RedisExpires))
-	log.Println("redis connected!")
+		time.Second*time.Duration(config.RedisExpires),
+	)
+
 	// handle requests
 	user := database.NewUserDB(db)
 	handlers.NewHandler(c, user, ucache).HandleAll()

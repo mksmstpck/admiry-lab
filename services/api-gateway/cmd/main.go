@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/api-gateway/config"
 	"github.com/mkskstpck/to-rename/services/api-gateway/events"
 	validator "github.com/mkskstpck/to-rename/services/api-gateway/handlers/validators"
 	handlers "github.com/mkskstpck/to-rename/services/api-gateway/handlers/web"
-	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -16,12 +16,10 @@ func main() {
 		panic(err)
 	}
 	//nats connection
-	nc, err := nats.Connect(config.NatsUrl)
+	c, err := conectors.NewNats(config.NatsUrl)
 	if err != nil {
 		panic(err)
 	}
-	c, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
-	defer c.Close()
 
 	//starts echo
 	e := echo.New()
