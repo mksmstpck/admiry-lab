@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 
+	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
@@ -17,12 +18,12 @@ func NewUserDB(database *sql.DB) *UserDB {
 }
 
 type Users interface {
-	UserFindOneId(ID int32) (models.User, int32, error)
-	UserFindOneUsername(username string) (models.User, int32, error)
-	UserFindOneEmail(email string) (models.User, int32, error)
-	UserCreateOne(user models.User) (int32, error)
-	UserUpdateOne(user models.User) (int32, error)
-	UserDeleteOne(ID int32) (int32, error)
+	UserFindOneById(uuid.UUID) (models.User, int32, error)
+	UserFindOneByUsername(string) (models.User, int32, error)
+	UserFindOneByEmail(string) (models.User, int32, error)
+	UserCreateOne(models.User) (int32, error)
+	UserUpdateOne(models.User) (int32, error)
+	UserDeleteOne(uuid.UUID) (int32, error)
 }
 
 type Database struct {

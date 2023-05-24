@@ -1,30 +1,43 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"os"
+	"strconv"
+)
 
 type Config struct {
-	PSQLhost     string `mapstructure:"PSQL_HOST"`
-	PSQLport     string `mapstructure:"PSQL_PORT"`
-	PSQLuser     string `mapstructure:"PSQL_USER"`
-	PSQLpass     string `mapstructure:"PSQL_PASS"`
-	PSQLdb       string `mapstructure:"PSQL_DB"`
-	NatsUrl      string `mapstructure:"NATS_URL"`
-	RedisHost    string `mapstructure:"REDIS_HOST"`
-	RedisPort    string `mapstructure:"REDIS_PORT"`
-	RedisDB      int    `mapstructure:"REDIS_DB"`
-	RedisExpires int64  `mapstructure:"REDIS_EXPIRES"`
+	PSQLhost     string
+	PSQLport     string
+	PSQLuser     string
+	PSQLpass     string
+	PSQLdb       string
+	NatsURI      string
+	RedisHost    string
+	RedisPort    string
+	RedisDB      int
+	RedisExpires int
 }
 
-func NewConfig() (c Config, err error) {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("dev")
-	viper.SetConfigType("env")
-
-	if err = viper.ReadInConfig(); err != nil {
-		return
+func NewConfig() Config {
+	redisDBint, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+	if err != nil {
+		panic(err)
+	}
+	redisExpiresint, err := strconv.Atoi(os.Getenv("REDIS_EXPIRES"))
+	if err != nil {
+		panic(err)
 	}
 
-	err = viper.Unmarshal(&c)
-
-	return
+	return Config{
+		PSQLhost:     os.Getenv("PSQL_HOST"),
+		PSQLport:     os.Getenv("PSQL_PORT"),
+		PSQLuser:     os.Getenv("PSQL_USER"),
+		PSQLpass:     os.Getenv("PSQL_PASS"),
+		PSQLdb:       os.Getenv("PSQL_DB"),
+		NatsURI:      os.Getenv("NATS_URI"),
+		RedisHost:    os.Getenv("REDIS_HOST"),
+		RedisPort:    os.Getenv("REDIS_PORT"),
+		RedisDB:      redisDBint,
+		RedisExpires: redisExpiresint,
+	}
 }

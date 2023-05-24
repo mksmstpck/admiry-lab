@@ -4,9 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+
+	_ "github.com/lib/pq" // TODO:
 )
 
-func NewPsql(port string, host string, user string, password string, database string) (*sql.DB, error) {
+func NewPsql(
+	port string,
+	host string,
+	user string,
+	password string,
+	database string,
+) (*sql.DB, error) {
 	portInt, err := strconv.Atoi(port)
 	if err != nil {
 		return nil, err
@@ -22,7 +30,7 @@ func NewPsql(port string, host string, user string, password string, database st
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+
 	err = db.Ping()
 	if err != nil {
 		return nil, err

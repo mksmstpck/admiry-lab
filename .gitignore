@@ -1,0 +1,3 @@
+services/api-gateway/dev.env
+services/user-service/dev.env
+.docker

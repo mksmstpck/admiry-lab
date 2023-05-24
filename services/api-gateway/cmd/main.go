@@ -11,23 +11,25 @@ import (
 
 func main() {
 	// config
-	config, err := config.NewConfig()
-	if err != nil {
-		panic(err)
-	}
-	//nats connection
+	config := config.NewConfig()
+
+	// nats connection
 	c, err := conectors.NewNats(config.NatsUrl)
 	if err != nil {
 		panic(err)
 	}
 
-	//starts echo
+	// starts echo
 	e := echo.New()
 	e.Validator = validator.NewCustomeValidator()
 	userEvent := events.NewUserEvent(c)
 	roleEvent := events.NewRoleEvent(c)
 	permissionEvent := events.NewPermissionEvent(c)
-	handlers := handlers.NewHandlers(e, c, userEvent, roleEvent, permissionEvent)
-	handlers.All()
+	handlers.NewHandlers(
+		e,
+		c,
+		userEvent,
+		roleEvent,
+		permissionEvent).All()
 	e.Logger.Fatal(e.Start(config.EchoUrl))
 }

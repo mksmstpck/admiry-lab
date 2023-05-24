@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
 	"github.com/mkskstpck/to-rename/pkg/services"
 )
 
-func (d *UserDB) UserFindOneId(ID int32) (models.User, int32, error) {
+func (d *UserDB) UserFindOneById(ID uuid.UUID) (models.User, int32, error) {
 	var user models.User
 	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "id" = $1`
 	row := d.database.QueryRow(selectQuery, ID)
@@ -19,7 +20,7 @@ func (d *UserDB) UserFindOneId(ID int32) (models.User, int32, error) {
 	return user, 200, nil
 }
 
-func (d *UserDB) UserFindOneEmail(email string) (models.User, int32, error) {
+func (d *UserDB) UserFindOneByEmail(email string) (models.User, int32, error) {
 	var user models.User
 	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "email" = $1`
 	row := d.database.QueryRow(selectQuery, email)
@@ -30,7 +31,7 @@ func (d *UserDB) UserFindOneEmail(email string) (models.User, int32, error) {
 	return user, 200, nil
 }
 
-func (d *UserDB) UserFindOneUsername(username string) (models.User, int32, error) {
+func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, error) {
 	var user models.User
 	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "username" = $1`
 	row := d.database.QueryRow(selectQuery, username)
@@ -57,8 +58,8 @@ func (d *UserDB) UserCreateOne(user models.User) (int32, error) {
 }
 
 func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
-	u, code, err := d.UserFindOneId(user.ID)
-	if u.ID == 0 {
+	u, code, err := d.UserFindOneById(user.ID)
+	if u.ID == uuid.Nil {
 		return 404, errors.New("user not found")
 	}
 	if code != 200 {
@@ -77,9 +78,9 @@ func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
 	return 200, nil
 }
 
-func (d *UserDB) UserDeleteOne(ID int32) (int32, error) {
-	u, code, err := d.UserFindOneId(ID)
-	if u.ID == 0 {
+func (d *UserDB) UserDeleteOne(ID uuid.UUID) (int32, error) {
+	u, code, err := d.UserFindOneById(ID)
+	if u.ID == uuid.Nil {
 		return 404, errors.New("user not found")
 	}
 	if code != 200 {

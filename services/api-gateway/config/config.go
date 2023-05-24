@@ -1,22 +1,15 @@
 package config
 
-import "github.com/spf13/viper"
+import "os"
 
 type Config struct {
-	NatsUrl string `mapstructure:"NATS_URL"`
-	EchoUrl string `mapstructure:"ECHO_URL"`
+	NatsUrl string
+	EchoUrl string
 }
 
-func NewConfig() (c Config, err error) {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("dev")
-	viper.SetConfigType("env")
-
-	if err = viper.ReadInConfig(); err != nil {
-		return
+func NewConfig() Config {
+	return Config{
+		NatsUrl: os.Getenv("NATS_URI"),
+		EchoUrl: os.Getenv("ECHO_URL"),
 	}
-
-	err = viper.Unmarshal(&c)
-
-	return
 }

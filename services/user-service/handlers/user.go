@@ -2,28 +2,28 @@ package handlers
 
 import (
 	"context"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 func (h *Handler) userIdRead() {
-	h.conn.Subscribe("users-id-get", func(_, reply string, id int32) {
-		user, code, err := h.cache.Get(strconv.Itoa(int(id)), context.Background())
+	h.conn.Subscribe("users-id-get", func(_, reply string, id uuid.UUID) {
+		user, code, err := h.cache.Get(id.String(), context.Background())
 		if code == 200 {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
-		user, code, err = h.user.UserFindOneId(id)
+		user, code, err = h.user.UserFindOneById(id)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		if user.(models.User).ID == 0 {
+		if user.(models.User).ID == uuid.Nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
 			h.conn.Publish(reply, res)
 		}
-		code, err = h.cache.Set(strconv.Itoa(int(id)), user, context.Background())
+		code, err = h.cache.Set(id.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
@@ -40,12 +40,12 @@ func (h *Handler) userUsernameRead() {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
-		user, code, err = h.user.UserFindOneUsername(username)
+		user, code, err = h.user.UserFindOneByUsername(username)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		if user.(models.User).ID == 0 {
+		if user.(models.User).ID == uuid.Nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
 			h.conn.Publish(reply, res)
 		}
@@ -66,12 +66,12 @@ func (h *Handler) userEmailRead() {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
-		user, code, err = h.user.UserFindOneEmail(email)
+		user, code, err = h.user.UserFindOneByEmail(email)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		if user.(models.User).ID == 0 {
+		if user.(models.User).ID == uuid.Nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
 			h.conn.Publish(reply, res)
 		}
@@ -87,22 +87,22 @@ func (h *Handler) userEmailRead() {
 
 func (h *Handler) userCreate() {
 	h.conn.Subscribe("users-post", func(_, reply string, user models.User) {
-		userExistUsername, code, err := h.user.UserFindOneUsername(user.Username)
+		userExistUsername, code, err := h.user.UserFindOneByUsername(user.Username)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		if userExistUsername.ID != 0 {
+		if userExistUsername.ID != uuid.Nil {
 			res := models.Response[models.User]{Status: 409, Error: "user with this username already exists"}
 			h.conn.Publish(reply, res)
 			return
 		}
-		userExistEmail, code, err := h.user.UserFindOneEmail(user.Email)
+		userExistEmail, code, err := h.user.UserFindOneByEmail(user.Email)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		if userExistEmail.ID != 0 {
+		if userExistEmail.ID != uuid.Nil {
 			res := models.Response[models.User]{Status: 409, Error: "user with this email already exists"}
 			h.conn.Publish(reply, res)
 			return
@@ -112,12 +112,12 @@ func (h *Handler) userCreate() {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		user, code, err = h.user.UserFindOneEmail(user.Email)
+		user, code, err = h.user.UserFindOneByEmail(user.Email)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		code, err = h.cache.Set(strconv.Itoa(int(user.ID)), user, context.Background())
+		code, err = h.cache.Set(user.ID.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
@@ -134,7 +134,7 @@ func (h *Handler) userUpdate() {
 			res := models.Response[string]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		code, err = h.cache.Set(strconv.Itoa(int(user.ID)), user, context.Background())
+		code, err = h.cache.Set(user.ID.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
@@ -145,13 +145,13 @@ func (h *Handler) userUpdate() {
 }
 
 func (h *Handler) userDelete() {
-	h.conn.Subscribe("users-delete", func(_, reply string, id int32) {
+	h.conn.Subscribe("users-delete", func(_, reply string, id uuid.UUID) {
 		code, err := h.user.UserDeleteOne(id)
 		if err != nil {
 			res := models.Response[string]{Status: code, Message: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		code, err = h.cache.Delete(strconv.Itoa(int(id)), context.Background())
+		code, err = h.cache.Delete(id.String(), context.Background())
 		if err != nil {
 			res := models.Response[string]{Status: code, Message: err.Error()}
 			h.conn.Publish(reply, res)

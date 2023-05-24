@@ -12,13 +12,10 @@ import (
 
 func main() {
 	// config
-	config, err := config.NewConfig()
-	if err != nil {
-		panic(err)
-	}
+	config := config.NewConfig()
 
 	//nats connection
-	c, err := conectors.NewNats(config.NatsUrl)
+	c, err := conectors.NewNats(config.NatsURI)
 	if err != nil {
 		panic(err)
 	}
@@ -34,6 +31,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	// redis connection
 	ucache := conectors.NewCache(
