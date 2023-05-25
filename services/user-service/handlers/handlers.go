@@ -21,9 +21,9 @@ func NewHandler(conn *nats.EncodedConn, user *database.UserDB, cache *cache.Cach
 }
 
 func (h *Handler) HandleAll() {
-	h.userIdRead()
-	h.userUsernameRead()
-	h.userEmailRead()
+	h.userReadById()
+	h.userReadByUsername()
+	h.userReadByEmail()
 	h.userCreate()
 	h.userUpdate()
 	h.userDelete()

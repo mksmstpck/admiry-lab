@@ -7,7 +7,7 @@ import (
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
-func (h *Handler) userIdRead() {
+func (h *Handler) userReadById() {
 	h.conn.Subscribe("users-id-get", func(_, reply string, id uuid.UUID) {
 		user, code, err := h.cache.Get(id.String(), context.Background())
 		if code == 200 {
@@ -33,7 +33,7 @@ func (h *Handler) userIdRead() {
 	})
 }
 
-func (h *Handler) userUsernameRead() {
+func (h *Handler) userReadByUsername() {
 	h.conn.Subscribe("users-username-get", func(_, reply string, username string) {
 		user, code, err := h.cache.Get(username, context.Background())
 		if err == nil {
@@ -59,7 +59,7 @@ func (h *Handler) userUsernameRead() {
 	})
 }
 
-func (h *Handler) userEmailRead() {
+func (h *Handler) userReadByEmail() {
 	h.conn.Subscribe("users-email-get", func(_, reply string, email string) {
 		user, code, err := h.cache.Get(email, context.Background())
 		if err == nil {
