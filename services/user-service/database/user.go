@@ -11,9 +11,9 @@ import (
 
 func (d *UserDB) UserFindOneById(ID uuid.UUID) (models.User, int32, error) {
 	var user models.User
-	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "id" = $1`
+	selectQuery := `select "id", "username", "fullname", "email" from "Users" where "id" = $1`
 	row := d.database.QueryRow(selectQuery, ID)
-	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email, &user.RoleID)
+	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email)
 	if err != sql.ErrNoRows {
 		return user, 500, err
 	}
@@ -22,9 +22,9 @@ func (d *UserDB) UserFindOneById(ID uuid.UUID) (models.User, int32, error) {
 
 func (d *UserDB) UserFindOneByEmail(email string) (models.User, int32, error) {
 	var user models.User
-	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "email" = $1`
+	selectQuery := `select "id", "username", "fullname", "email" from "Users" where "email" = $1`
 	row := d.database.QueryRow(selectQuery, email)
-	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email, &user.RoleID)
+	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email)
 	if err != sql.ErrNoRows {
 		return user, 500, err
 	}
@@ -33,9 +33,9 @@ func (d *UserDB) UserFindOneByEmail(email string) (models.User, int32, error) {
 
 func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, error) {
 	var user models.User
-	selectQuery := `select "id", "username", "fullname", "email", "roleid" from "Users" where "username" = $1`
+	selectQuery := `select "id", "username", "fullname", "email" from "Users" where "username" = $1`
 	row := d.database.QueryRow(selectQuery, username)
-	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email, &user.RoleID)
+	err := row.Scan(&user.ID, &user.Username, &user.FullName, &user.Email)
 	if err != sql.ErrNoRows {
 		return user, 500, err
 	}
@@ -43,14 +43,14 @@ func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, err
 }
 
 func (d *UserDB) UserCreateOne(user models.User) (int32, error) {
-	insertQuery := `insert into "Users"("username", "fullname", "email", "password", "roleid") values ($1, $2, $3, $4, $5)`
+	insertQuery := `insert into "Users"("username", "fullname", "email", "password") values ($1, $2, $3, $4)`
 	_, err := d.database.Exec(
 		insertQuery,
 		user.Username,
 		user.FullName,
 		user.Email,
 		services.PasswordHash(user.Password),
-		user.RoleID)
+	)
 	if err != sql.ErrNoRows {
 		return 500, err
 	}
@@ -65,12 +65,11 @@ func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
 	if code != 200 {
 		return code, err
 	}
-	updateQuery := `update "Users" set "fullname" = $1, "password" = $2, "roleid" = $3 where "id" = $4`
+	updateQuery := `update "Users" set "fullname" = $1, "password" = $2 where "id" = $3`
 	_, err = d.database.Exec(
 		updateQuery,
 		user.FullName,
 		services.PasswordHash(user.Password),
-		user.RoleID,
 		user.ID)
 	if err != sql.ErrNoRows {
 		return 500, err
@@ -79,11 +78,11 @@ func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
 }
 
 func (d *UserDB) UserDeleteOne(ID uuid.UUID) (int32, error) {
-	u, code, err := d.UserFindOneById(ID)
-	if u.ID == uuid.Nil {
+	_, code, err := d.UserFindOneById(ID)
+	if err == sql.ErrNoRows {
 		return 404, errors.New("user not found")
 	}
-	if code != 200 {
+	if err != nil {
 		return code, err
 	}
 	deleteQuery := `delete from "Users" where "id" = $1`

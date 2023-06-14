@@ -8,5 +8,4 @@ type User struct {
 	FullName string    `json:"fullName" validate:"required"`
 	Email    string    `json:"email" validate:"required,email"`
 	Password string    `json:"password" validate:"required"`
-	RoleID   int       `json:"role" validate:"required"`
 }
