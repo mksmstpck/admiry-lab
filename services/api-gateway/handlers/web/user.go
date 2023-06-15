@@ -2,19 +2,19 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
 func (h *Handlers) UserIdRead(c echo.Context) error {
 	id := c.Param("id")
-	idInt, err := strconv.Atoi(id)
+	uuID, err := uuid.Parse(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
 	}
-	u, code, err := h.user.UserIdGet(int32(idInt))
+	u, code, err := h.user.UserIdGet(uuID)
 	if err != nil {
 		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
@@ -72,11 +72,11 @@ func (h *Handlers) UserUpdate(c echo.Context) error {
 
 func (h *Handlers) UserDelete(c echo.Context) error {
 	id := c.Param("id")
-	idInt, err := strconv.Atoi(id)
+	uuID, err := uuid.Parse(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
 	}
-	code, err := h.user.UserDelete(int32(idInt))
+	code, err := h.user.UserDelete(uuID)
 	if err != nil {
 		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
