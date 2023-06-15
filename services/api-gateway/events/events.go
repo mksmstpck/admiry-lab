@@ -1,6 +1,7 @@
 package events
 
 import (
+	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
 	"github.com/nats-io/nats.go"
 )
@@ -38,8 +39,8 @@ func NewRoleEvent(conn *nats.EncodedConn) *Role {
 type Users interface {
 	UserEmailGet(email string) (models.User, int32, error)
 	UserUsernameGet(username string) (models.User, int32, error)
-	UserIdGet(id int32) (models.User, int32, error)
+	UserIdGet(id uuid.UUID) (models.User, int32, error)
 	UserPost(user *models.User) (models.User, int32, error)
 	UserPut(user *models.User) (int32, error)
-	UserDelete(id int32) (int32, error)
+	UserDelete(id uuid.UUID) (int32, error)
 }

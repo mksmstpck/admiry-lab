@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
@@ -31,7 +32,7 @@ func (u User) UserUsernameGet(username string) (models.User, int32, error) {
 	return res.Message, res.Status, nil
 }
 
-func (u User) UserIdGet(id int32) (models.User, int32, error) {
+func (u User) UserIdGet(id uuid.UUID) (models.User, int32, error) {
 	var res models.Response[models.User]
 	err := u.conn.Request("users-id-get", id, &res, time.Second)
 	if err != nil {
@@ -67,7 +68,7 @@ func (u User) UserPut(user *models.User) (int32, error) {
 	return res.Status, nil
 }
 
-func (u User) UserDelete(id int32) (int32, error) {
+func (u User) UserDelete(id uuid.UUID) (int32, error) {
 	var res models.Response[string]
 	err := u.conn.Request("users-delete", id, &res, time.Second)
 	if err != nil {
