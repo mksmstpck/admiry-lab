@@ -39,11 +39,11 @@ services:
 
   db:
     image: postgres
-    restart: always
     environment:
+      POSTGRES_DATABASE: user_service
       POSTGRES_PASSWORD: password
     volumes:
-      - ./.docker/.database/postgres/data:/var/lib/postgres/data
+      - .docker/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
