@@ -41,5 +41,5 @@ func (c *Cacher) Delete(key string, ctx context.Context) (int32, error) {
 	if err != nil {
 		return 500, err
 	}
-	return 200, nil
+	return 204, nil
 }
