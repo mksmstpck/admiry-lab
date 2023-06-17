@@ -10,12 +10,12 @@ import (
 func (h *Handler) userReadById() {
 	h.conn.Subscribe("users-id-get", func(_, reply string, id uuid.UUID) {
 		user, code, err := h.cache.Get(id.String(), context.Background())
-		if code == 200 {
+		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneById(id)
-		if err != nil {
+		if err != nil && user != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
@@ -36,12 +36,12 @@ func (h *Handler) userReadById() {
 func (h *Handler) userReadByUsername() {
 	h.conn.Subscribe("users-username-get", func(_, reply string, username string) {
 		user, code, err := h.cache.Get(username, context.Background())
-		if err == nil {
+		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneByUsername(username)
-		if err != nil {
+		if err != nil && user != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
@@ -62,12 +62,12 @@ func (h *Handler) userReadByUsername() {
 func (h *Handler) userReadByEmail() {
 	h.conn.Subscribe("users-email-get", func(_, reply string, email string) {
 		user, code, err := h.cache.Get(email, context.Background())
-		if err == nil {
+		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneByEmail(email)
-		if err != nil {
+		if err != nil && user != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
@@ -148,7 +148,7 @@ func (h *Handler) userDelete() {
 	h.conn.Subscribe("users-delete", func(_, reply string, id uuid.UUID) {
 		code, err := h.user.UserDeleteOne(id)
 		if err != nil {
-			res := models.Response[string]{Status: code, Message: err.Error()}
+			res := models.Response[string]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
 		code, err = h.cache.Delete(id.String(), context.Background())
@@ -156,7 +156,7 @@ func (h *Handler) userDelete() {
 			res := models.Response[string]{Status: code, Message: err.Error()}
 			h.conn.Publish(reply, res)
 		}
-		res := models.Response[string]{Status: 204, Message: "deleted"}
+		res := models.Response[string]{Status: code, Message: "deleted"}
 		h.conn.Publish(reply, res)
 	})
 }

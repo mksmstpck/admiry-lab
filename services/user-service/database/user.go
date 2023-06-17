@@ -71,24 +71,24 @@ func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
 		user.FullName,
 		services.PasswordHash(user.Password),
 		user.ID)
-	if err != sql.ErrNoRows {
+	if err != nil {
 		return 500, err
 	}
 	return 200, nil
 }
 
 func (d *UserDB) UserDeleteOne(ID uuid.UUID) (int32, error) {
-	_, code, err := d.UserFindOneById(ID)
-	if err == sql.ErrNoRows {
-		return 404, errors.New("user not found")
-	}
-	if err != nil {
-		return code, err
-	}
 	deleteQuery := `delete from "Users" where "id" = $1`
-	_, err = d.database.Exec(deleteQuery, ID)
-	if err != sql.ErrNoRows {
+	res, err := d.database.Exec(deleteQuery, ID)
+	if err != nil {
 		return 500, err
 	}
-	return 200, nil
+	count, err := res.RowsAffected()
+	if err != nil {
+		return 500, err
+	}
+	if count == 0 {
+		return 404, errors.New("user not found")
+	}
+	return 204, nil
 }

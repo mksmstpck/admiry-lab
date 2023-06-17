@@ -2,6 +2,7 @@ package events
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -75,7 +76,9 @@ func (u User) UserDelete(id uuid.UUID) (int32, error) {
 		return 500, err
 	}
 	if res.Error != "" {
+		log.Println(res.Error)
 		return res.Status, errors.New(res.Error)
 	}
+	log.Println(res.Error)
 	return res.Status, nil
 }
