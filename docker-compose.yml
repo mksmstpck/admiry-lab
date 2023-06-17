@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  nats:
+    image: 'nats:0.8.0'
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  user-service:
+    env_file:
+      - ./services/user-service/dev.env
+    links:
+      - nats
+      - db
+      - redis
+    depends_on:
+      - nats
+      - db
+      - redis
+    networks:
+      - default
+    build:
+      context: .
+      dockerfile: ./services/user-service/Dockerfile
+
+  api-gateway:
+    env_file:
+      - ./services/api-gateway/dev.env
+    links:
+      - nats
+    depends_on:
+      - nats
+    build:
+      context: .
+      dockerfile: ./services/api-gateway/Dockerfile
+    ports:
+      - "1323:1323"
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DATABASE: user_service
+      POSTGRES_PASSWORD: password
+    volumes:
+      - .docker/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7.0-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+volumes:
+  db:
+    driver: local
