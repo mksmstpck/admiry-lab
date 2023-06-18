@@ -15,7 +15,7 @@ func (h *Handler) userReadById() {
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneById(id)
-		if err != nil && user != nil {
+		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
@@ -41,7 +41,7 @@ func (h *Handler) userReadByUsername() {
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneByUsername(username)
-		if err != nil && user != nil {
+		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
@@ -67,7 +67,7 @@ func (h *Handler) userReadByEmail() {
 			h.conn.Publish(reply, res)
 		}
 		user, code, err = h.user.UserFindOneByEmail(email)
-		if err != nil && user != nil {
+		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
 			h.conn.Publish(reply, res)
 		}
