@@ -23,13 +23,9 @@ func main() {
 	e := echo.New()
 	e.Validator = validator.NewCustomeValidator()
 	userEvent := events.NewUserEvent(c)
-	roleEvent := events.NewRoleEvent(c)
-	permissionEvent := events.NewPermissionEvent(c)
 	handlers.NewHandlers(
 		e,
 		c,
-		userEvent,
-		roleEvent,
-		permissionEvent).All()
+		userEvent).All()
 	e.Logger.Fatal(e.Start(config.EchoUrl))
 }

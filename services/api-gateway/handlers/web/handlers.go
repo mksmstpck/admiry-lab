@@ -13,7 +13,7 @@ type Handlers struct {
 	user events.Users
 }
 
-func NewHandlers(echo *echo.Echo, c *nats.EncodedConn, user *events.User, role *events.Role, permission *events.Permission) *Handlers {
+func NewHandlers(echo *echo.Echo, c *nats.EncodedConn, user *events.User) *Handlers {
 	return &Handlers{
 		e:    echo,
 		conn: c,
@@ -25,10 +25,10 @@ func (h *Handlers) All() {
 	// grougs
 	user := h.e.Group("/users")
 	// user endpoints
-	user.POST("/", h.UserCreate)
-	user.GET("/id/:id", h.UserIdRead)
-	user.GET("/username/:username", h.UserUsernameRead)
-	user.GET("/email/:email", h.UserEmailRead)
-	user.PUT("/", h.UserUpdate)
-	user.DELETE("/:id", h.UserDelete)
+	user.POST("/", h.userCreate)
+	user.GET("/id/:id", h.userReadById)
+	user.GET("/username/:username", h.userReadByUsername)
+	user.GET("/email/:email", h.userReadByEmail)
+	user.PUT("/", h.userUpdate)
+	user.DELETE("/:id", h.userDelete)
 }

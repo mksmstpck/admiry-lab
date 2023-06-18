@@ -9,7 +9,7 @@ import (
 	"github.com/mkskstpck/to-rename/pkg/models"
 )
 
-func (u User) UserEmailGet(email string) (models.User, int32, error) {
+func (u User) UserGetByEmail(email string) (models.User, int32, error) {
 	var res models.Response[models.User]
 	err := u.conn.Request("users-email-get", email, &res, time.Second)
 	if err != nil {
@@ -21,7 +21,7 @@ func (u User) UserEmailGet(email string) (models.User, int32, error) {
 	return res.Message, res.Status, nil
 }
 
-func (u User) UserUsernameGet(username string) (models.User, int32, error) {
+func (u User) UserGetByUsername(username string) (models.User, int32, error) {
 	var res models.Response[models.User]
 	err := u.conn.Request("users-username-get", username, &res, time.Second)
 	if err != nil {
@@ -33,7 +33,7 @@ func (u User) UserUsernameGet(username string) (models.User, int32, error) {
 	return res.Message, res.Status, nil
 }
 
-func (u User) UserIdGet(id uuid.UUID) (models.User, int32, error) {
+func (u User) UserGetById(id uuid.UUID) (models.User, int32, error) {
 	var res models.Response[models.User]
 	err := u.conn.Request("users-id-get", id, &res, time.Second)
 	if err != nil {
