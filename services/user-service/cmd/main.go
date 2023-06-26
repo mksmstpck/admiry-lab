@@ -22,8 +22,7 @@ func main() {
 
 	// postgres connection
 	db, err := conectors.NewPsql(
-		config.PSQLport,
-		config.PSQLhost,
+		config.PSQLaddr,
 		config.PSQLuser,
 		config.PSQLpass,
 		config.PSQLdb,

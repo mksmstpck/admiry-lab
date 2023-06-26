@@ -6,8 +6,7 @@ import (
 )
 
 type Config struct {
-	PSQLhost     string
-	PSQLport     string
+	PSQLaddr     string
 	PSQLuser     string
 	PSQLpass     string
 	PSQLdb       string
@@ -29,8 +28,7 @@ func NewConfig() Config {
 	}
 
 	return Config{
-		PSQLhost:     os.Getenv("PSQL_HOST"),
-		PSQLport:     os.Getenv("PSQL_PORT"),
+		PSQLaddr:     os.Getenv("PSQL_ADDR"),
 		PSQLuser:     os.Getenv("PSQL_USER"),
 		PSQLpass:     os.Getenv("PSQL_PASS"),
 		PSQLdb:       os.Getenv("PSQL_DB"),
