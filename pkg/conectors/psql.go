@@ -2,38 +2,27 @@ package conectors
 
 import (
 	"database/sql"
-	"fmt"
-	"strconv"
 
-	_ "github.com/lib/pq" // TODO:
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 )
 
 func NewPsql(
-	port string,
-	host string,
+	addr string,
 	user string,
 	password string,
 	database string,
-) (*sql.DB, error) {
-	portInt, err := strconv.Atoi(port)
-	if err != nil {
-		return nil, err
-	}
-	psqlConn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host,
-		portInt,
-		user,
-		password,
-		database,
-	)
-	db, err := sql.Open("postgres", psqlConn)
-	if err != nil {
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
+) (*bun.DB, error) {
+	sqldb := sql.OpenDB(pgdriver.NewConnector(
+		pgdriver.WithNetwork("tcp"),
+		pgdriver.WithAddr(addr),
+		pgdriver.WithUser(user),
+		pgdriver.WithPassword(password),
+		pgdriver.WithDatabase(database),
+		pgdriver.WithInsecure(true),
+		pgdriver.WithDatabase(database),
+	))
+	db := bun.NewDB(sqldb, pgdialect.New())
 	return db, nil
 }
