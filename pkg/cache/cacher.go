@@ -8,8 +8,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func (c *Cacher) Get(key string, ctx context.Context) (interface{}, int32, error) {
-	user := models.User{}
+func (c *Cacher) GetCompany(key string, ctx context.Context) (interface{}, int32, error) {
+	var res models.Company
 	val, err := c.client.Get(ctx, key).Result()
 	if err == redis.Nil {
 		return nil, 404, nil
@@ -17,11 +17,27 @@ func (c *Cacher) Get(key string, ctx context.Context) (interface{}, int32, error
 	if err != nil {
 		return nil, 500, err
 	}
-	err = json.Unmarshal([]byte(val), &user)
+	err = json.Unmarshal([]byte(val), &res)
 	if err != nil {
 		return nil, 500, err
 	}
-	return user, 200, nil
+	return res, 200, nil
+}
+
+func (c *Cacher) GetUser(key string, ctx context.Context) (interface{}, int32, error) {
+	var res models.User
+	val, err := c.client.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return nil, 404, nil
+	}
+	if err != nil {
+		return nil, 500, err
+	}
+	err = json.Unmarshal([]byte(val), &res)
+	if err != nil {
+		return nil, 500, err
+	}
+	return res, 200, nil
 }
 
 func (c *Cacher) Set(key string, value interface{}, ctx context.Context) (int32, error) {
