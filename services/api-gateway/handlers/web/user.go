@@ -3,18 +3,18 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/pborman/uuid"
 )
 
 func (h *Handlers) userReadById(c echo.Context) error {
 	id := c.Param("id")
-	uuID, err := uuid.Parse(id)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
+	UUID := uuid.Parse(id)
+	if UUID == nil {
+		return c.JSON(http.StatusNotFound, models.Message{Message: "company not found"})
 	}
-	u, code, err := h.user.UserGetById(uuID)
+	u, code, err := h.user.UserGetById(UUID)
 	if err != nil {
 		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
@@ -72,11 +72,11 @@ func (h *Handlers) userUpdate(c echo.Context) error {
 
 func (h *Handlers) userDelete(c echo.Context) error {
 	id := c.Param("id")
-	uuID, err := uuid.Parse(id)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, models.Message{Message: err.Error()})
+	UUID := uuid.Parse(id)
+	if UUID == nil {
+		return c.JSON(http.StatusNotFound, models.Message{Message: "User not found"})
 	}
-	code, err := h.user.UserDelete(uuID)
+	code, err := h.user.UserDelete(UUID)
 	if err != nil {
 		return c.JSON(int(code), models.Message{Message: err.Error()})
 	}
