@@ -23,9 +23,11 @@ func main() {
 	e := echo.New()
 	e.Validator = validator.NewCustomeValidator()
 	userEvent := events.NewUserEvent(c)
+	companyEvent := events.NewCompanyEvent(c)
 	handlers.NewHandlers(
 		e,
 		c,
-		userEvent).All()
+		userEvent,
+		companyEvent).All()
 	e.Logger.Fatal(e.Start(config.EchoUrl))
 }
