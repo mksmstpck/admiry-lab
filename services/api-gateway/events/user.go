@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/pborman/uuid"
 )
 
 func (u User) UserGetByEmail(email string) (models.User, int32, error) {
