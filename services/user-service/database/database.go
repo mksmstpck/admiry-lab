@@ -1,17 +1,16 @@
 package database
 
 import (
-	"database/sql"
-
-	"github.com/google/uuid"
 	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/pborman/uuid"
+	"github.com/uptrace/bun"
 )
 
 type UserDB struct {
-	database *sql.DB
+	database *bun.DB
 }
 
-func NewUserDB(database *sql.DB) *UserDB {
+func NewUserDB(database *bun.DB) *UserDB {
 	return &UserDB{
 		database: database,
 	}

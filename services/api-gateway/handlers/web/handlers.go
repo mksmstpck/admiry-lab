@@ -8,27 +8,37 @@ import (
 )
 
 type Handlers struct {
-	e    *echo.Echo
-	conn *nats.EncodedConn
-	user events.Users
+	e       *echo.Echo
+	conn    *nats.EncodedConn
+	user    events.Users
+	company events.Companies
 }
 
-func NewHandlers(echo *echo.Echo, c *nats.EncodedConn, user *events.User, role *events.Role, permission *events.Permission) *Handlers {
+func NewHandlers(echo *echo.Echo, c *nats.EncodedConn, user *events.User, company *events.Company) *Handlers {
 	return &Handlers{
-		e:    echo,
-		conn: c,
-		user: user,
+		e:       echo,
+		conn:    c,
+		user:    user,
+		company: company,
 	}
 }
 
 func (h *Handlers) All() {
 	// grougs
 	user := h.e.Group("/users")
+	company := h.e.Group("/companies")
 	// user endpoints
-	user.POST("/", h.UserCreate)
-	user.GET("/id/:id", h.UserIdRead)
-	user.GET("/username/:username", h.UserUsernameRead)
-	user.GET("/email/:email", h.UserEmailRead)
-	user.PUT("/", h.UserUpdate)
-	user.DELETE("/:id", h.UserDelete)
+	user.POST("/", h.userCreate)
+	user.GET("/id/:id", h.userReadById)
+	user.GET("/username/:username", h.userReadByUsername)
+	user.GET("/email/:email", h.userReadByEmail)
+	user.PUT("/", h.userUpdate)
+	user.DELETE("/:id", h.userDelete)
+	// company endpoints
+	company.POST("/", h.companyCreate)
+	company.GET("/id/:id", h.companyReadById)
+	company.GET("/name/:name", h.companyReadByName)
+	company.GET("/", h.companyReadAll)
+	company.PUT("/", h.companyUpdate)
+	company.DELETE("/:id", h.companyDelete)
 }

@@ -36,6 +36,23 @@ services:
       dockerfile: ./services/api-gateway/Dockerfile
     ports:
       - "1323:1323"
+  
+  company-service:
+    env_file:
+      - ./services/company-service/dev.env
+    links:
+      - nats
+      - db
+      - redis
+    depends_on:
+      - nats
+      - db
+      - redis
+    networks:
+      - default
+    build:
+      context: .
+      dockerfile: ./services/company-service/Dockerfile
 
   db:
     image: postgres
