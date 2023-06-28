@@ -12,7 +12,7 @@ import (
 
 func (d *UserDB) UserFindOneById(ID uuid.UUID) (models.User, int32, error) {
 	user := models.User{}
-	err := d.database.NewSelect().Model(&user).Where("id = ?", ID).Scan(context.Background())
+	err := d.database.NewSelect().Model(&user).ExcludeColumn("password").Where("id = ?", ID).Scan(context.Background())
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, 404, errors.New("user not found")
@@ -24,7 +24,7 @@ func (d *UserDB) UserFindOneById(ID uuid.UUID) (models.User, int32, error) {
 
 func (d *UserDB) UserFindOneByEmail(email string) (models.User, int32, error) {
 	user := models.User{}
-	err := d.database.NewSelect().Model(&user).Where("email = ?", email).Scan(context.Background())
+	err := d.database.NewSelect().Model(&user).ExcludeColumn("password").Where("email = ?", email).Scan(context.Background())
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, 404, errors.New("user not found")
@@ -36,7 +36,7 @@ func (d *UserDB) UserFindOneByEmail(email string) (models.User, int32, error) {
 
 func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, error) {
 	user := models.User{}
-	err := d.database.NewSelect().Model(&user).Where("username = ?", username).Scan(context.Background())
+	err := d.database.NewSelect().Model(&user).ExcludeColumn("password").Where("username = ?", username).Scan(context.Background())
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return models.User{}, 404, errors.New("user not found")
@@ -56,7 +56,7 @@ func (d *UserDB) UserCreateOne(user models.User) (int32, error) {
 }
 
 func (d *UserDB) UserUpdateOne(user models.User) (int32, error) {
-	res, err := d.database.NewUpdate().Model(&user).Where("id = ?", user.ID).Exec(context.Background())
+	res, err := d.database.NewUpdate().Model(&user).ExcludeColumn("id", "password").Where("id = ?", user.ID).Exec(context.Background())
 	if err != nil {
 		return 500, err
 	}
