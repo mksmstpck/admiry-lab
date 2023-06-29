@@ -3,6 +3,7 @@ package conectors
 import (
 	"database/sql"
 
+	"github.com/labstack/gommon/log"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -24,5 +25,6 @@ func NewPsql(
 		pgdriver.WithDatabase(database),
 	))
 	db := bun.NewDB(sqldb, pgdialect.New())
+	log.Info("connect to psql db")
 	return db, nil
 }
