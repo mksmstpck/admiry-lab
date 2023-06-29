@@ -55,7 +55,7 @@ services:
       dockerfile: ./services/company-service/Dockerfile
 
   db:
-    image: postgres
+    image: postgres:15
     environment:
       POSTGRES_DATABASE: user_service
       POSTGRES_PASSWORD: password
