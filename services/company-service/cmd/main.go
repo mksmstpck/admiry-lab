@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"github.com/labstack/gommon/log"
 	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/company-service/config"
 	"github.com/mkskstpck/to-rename/services/company-service/database"
@@ -27,7 +28,7 @@ func main() {
 		config.PSQLdb,
 	)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
@@ -42,6 +43,8 @@ func main() {
 	// handle requests
 	company := database.NewCompanyDB(db)
 	handlers.NewHandler(c, company, ccache).HandleAll()
+
+	log.Info("company-service is running")
 
 	<-make(chan int)
 }
