@@ -3,6 +3,8 @@ package main
 import (
 	"time"
 
+	"github.com/labstack/gommon/log"
+
 	_ "github.com/lib/pq"
 	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/user-service/config"
@@ -17,7 +19,7 @@ func main() {
 	//nats connection
 	c, err := conectors.NewNats(config.NatsURI)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// postgres connection
@@ -43,6 +45,8 @@ func main() {
 	// handle requests
 	user := database.NewUserDB(db)
 	handlers.NewHandler(c, user, ucache).HandleAll()
+
+	log.Info("user-service is running")
 
 	<-make(chan int)
 }
