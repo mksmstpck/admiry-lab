@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/api-gateway/config"
 	"github.com/mkskstpck/to-rename/services/api-gateway/events"
@@ -16,7 +17,7 @@ func main() {
 	// nats connection
 	c, err := conectors.NewNats(config.NatsUrl)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// starts echo
@@ -29,5 +30,6 @@ func main() {
 		c,
 		userEvent,
 		companyEvent).All()
+	e.Logger.SetLevel(log.DEBUG)
 	e.Logger.Fatal(e.Start(config.EchoUrl))
 }
