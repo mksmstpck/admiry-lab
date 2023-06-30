@@ -3,6 +3,8 @@ package config
 import (
 	"os"
 	"strconv"
+
+	"github.com/labstack/gommon/log"
 )
 
 type Config struct {
@@ -20,11 +22,11 @@ type Config struct {
 func NewConfig() Config {
 	redisDBint, err := strconv.Atoi(os.Getenv("REDIS_DB"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	redisExpiresint, err := strconv.Atoi(os.Getenv("REDIS_EXPIRES"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	return Config{
