@@ -1,0 +1,59 @@
+version: "3"
+
+tasks:
+
+# working with docker compose
+  up:
+    cmds:
+      - sudo docker compose up -d
+  
+  up-logs:
+    cmds:
+      - sudo docker compose up
+  
+  build:
+    cmds:
+      - sudo docker compose build
+  
+  build-and-up:
+    cmds:
+      - sudo docker compose up --build -d
+  
+  build-and-up-logs:
+    cmds:
+      - sudo docker compose up --build
+
+  down:
+    cmds:
+      - sudo docker compose down
+
+# working with postgres
+  psql:
+    cmds:
+      - sudo docker compose exec -it db psql -U postgres
+
+  psql-migrate:
+    cmds:
+      - task: psql-migrate-company
+      - task: psql-migrate-user
+
+  psql-migrate-company:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d company-services < sql/company-service/Company-migrate.sql
+  
+  psql-migrate-user:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d user-services < sql/user-service/User-migrate.sql
+
+  psql-drop:
+    cmds:
+      - task: psql-drop-company
+      - task: psql-drop-user
+
+  psql-drop-company:
+    cmds: 
+      - sudo docker compose exec -T db psql -U postgres -d company-services < sql/company-service/Company-drop.sql
+  
+  psql-drop-user:
+    cmds: 
+      - sudo docker compose exec -T db psql -U postgres -d user-services < sql/user-service/User-drop.sql
