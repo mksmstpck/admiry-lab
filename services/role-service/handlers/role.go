@@ -100,7 +100,7 @@ func (h *Handler) roleCreate() {
 }
 
 func (h *Handler) roleUpdate() {
-	_, err := h.conn.Subscribe("roles-update", func(_, reply string, role models.Role) {
+	_, err := h.conn.Subscribe("roles-put", func(_, reply string, role models.Role) {
 		code, err := h.role.RoleUpdateOne(role)
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
