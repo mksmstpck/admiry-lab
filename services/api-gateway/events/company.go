@@ -71,7 +71,7 @@ func (c Company) CompanyPost(company *models.Company) (models.Company, int32, er
 
 func (c Company) CompanyPut(company *models.Company) (int32, error) {
 	var res models.Response[string]
-	err := c.conn.Request("companies-update", company, &res, time.Second)
+	err := c.conn.Request("companies-put", company, &res, time.Second)
 	if err != nil {
 		log.Error("events.CompanyPut: ", err)
 		return 500, err

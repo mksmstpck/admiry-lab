@@ -141,7 +141,7 @@ func (h *Handler) companyCreate() {
 }
 
 func (h *Handler) companyUpdate() {
-	_, err := h.conn.Subscribe("companies-update", func(_, reply string, company models.Company) {
+	_, err := h.conn.Subscribe("companies-put", func(_, reply string, company models.Company) {
 		code, err := h.company.CompanyUpdateOne(company)
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
