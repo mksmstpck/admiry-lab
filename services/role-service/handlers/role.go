@@ -77,7 +77,7 @@ func (h *Handler) roleReadByName() {
 }
 
 func (h *Handler) roleCreate() {
-	_, err := h.conn.Subscribe("roles-create", func(_, reply string, role models.Role) {
+	_, err := h.conn.Subscribe("roles-post", func(_, reply string, role models.Role) {
 		code, err := h.role.RoleCreateOne(role)
 		if err != nil {
 			res := models.Response[models.Role]{Status: code, Error: err.Error()}

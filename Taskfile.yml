@@ -15,11 +15,11 @@ tasks:
     cmds:
       - sudo docker compose build
   
-  build-and-up:
+  build-up:
     cmds:
       - sudo docker compose up --build -d
   
-  build-and-up-logs:
+  build-up-logs:
     cmds:
       - sudo docker compose up --build
 
