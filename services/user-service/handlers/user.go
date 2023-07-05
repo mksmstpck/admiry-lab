@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/gommon/log"
 	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/to-rename/pkg/services"
 	"github.com/pborman/uuid"
 )
 
@@ -13,28 +14,28 @@ func (h *Handler) userReadById() {
 		user, code, err := h.cache.GetUser(id.String(), context.Background())
 		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user found by id")
 		}
 		user, code, err = h.user.UserFindOneById(id)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		if user.(models.User).ID == nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user not found by id")
 		}
 		code, err = h.cache.Set(id.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		res := models.Response[models.User]{Status: 200, Message: user.(models.User)}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user found by id")
 	})
 	if err != nil {
@@ -47,28 +48,28 @@ func (h *Handler) userReadByUsername() {
 		user, code, err := h.cache.GetUser(username, context.Background())
 		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user found by username")
 		}
 		user, code, err = h.user.UserFindOneByUsername(username)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		if user.(models.User).ID == nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user not found by username")
 		}
 		code, err = h.cache.Set(username, user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		res := models.Response[models.User]{Status: 200, Message: user.(models.User)}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user found by username")
 	})
 	if err != nil {
@@ -81,28 +82,28 @@ func (h *Handler) userReadByEmail() {
 		user, code, err := h.cache.GetUser(email, context.Background())
 		if err == nil && user != nil {
 			res := models.Response[models.User]{Status: code, Message: user.(models.User)}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user found by email")
 		}
 		user, code, err = h.user.UserFindOneByEmail(email)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		if user.(models.User).ID == nil {
 			res := models.Response[models.User]{Status: 404, Error: "user not found"}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user not found by email")
 		}
 		code, err = h.cache.Set(email, user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		res := models.Response[models.User]{Status: 200, Message: user.(models.User)}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user found by email")
 	})
 	if err != nil {
@@ -116,13 +117,13 @@ func (h *Handler) userCreate() {
 		if err != nil {
 			if err.Error() != "user not found" {
 				res := models.Response[models.User]{Status: code, Error: err.Error()}
-				h.conn.Publish(reply, res)
+				services.NatsPublishError(h.conn.Publish(reply, res))
 				log.Error("handlers: ", err)
 			}
 		}
 		if userExistUsername.ID != nil {
 			res := models.Response[models.User]{Status: 409, Error: "user with this username already exists"}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user with this username already exists")
 			return
 		}
@@ -130,36 +131,36 @@ func (h *Handler) userCreate() {
 		if err != nil {
 			if err.Error() != "user not found" {
 				res := models.Response[models.User]{Status: code, Error: err.Error()}
-				h.conn.Publish(reply, res)
+				services.NatsPublishError(h.conn.Publish(reply, res))
 				log.Error("handlers: ", err)
 			}
 		}
 		if userExistEmail.ID != nil {
 			res := models.Response[models.User]{Status: 409, Error: "user with this email already exists"}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: user with this email already exists")
 			return
 		}
 		code, err = h.user.UserCreateOne(user)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		user, code, err = h.user.UserFindOneByEmail(user.Email)
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		code, err = h.cache.Set(user.ID.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[models.User]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		res := models.Response[models.User]{Status: 201, Message: user}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user created")
 	})
 	if err != nil {
@@ -172,17 +173,17 @@ func (h *Handler) userUpdate() {
 		code, err := h.user.UserUpdateOne(user)
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		code, err = h.cache.Set(user.ID.String(), user, context.Background())
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 			log.Error("handlers: ", err)
 		}
 		res := models.Response[string]{Status: code, Message: "updated"}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user updated")
 	})
 	if err != nil {
@@ -196,16 +197,16 @@ func (h *Handler) userDelete() {
 		if err != nil {
 			log.Error("handlers: ", err)
 			res := models.Response[string]{Status: code, Error: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 		}
 		code, err = h.cache.Delete(id.String(), context.Background())
 		if err != nil {
 			log.Error("handlers: ", err)
 			res := models.Response[string]{Status: code, Message: err.Error()}
-			h.conn.Publish(reply, res)
+			services.NatsPublishError(h.conn.Publish(reply, res))
 		}
 		res := models.Response[string]{Status: code, Message: "deleted"}
-		h.conn.Publish(reply, res)
+		services.NatsPublishError(h.conn.Publish(reply, res))
 		log.Info("handlers: user deleted")
 	})
 	if err != nil {
