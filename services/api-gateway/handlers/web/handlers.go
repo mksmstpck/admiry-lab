@@ -1,32 +1,40 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/nats-io/nats.go"
 
 	"github.com/mkskstpck/to-rename/services/api-gateway/events"
 )
 
 type Handlers struct {
-	e       *echo.Echo
+	g       *gin.Engine
 	conn    *nats.EncodedConn
 	user    events.Users
 	company events.Companies
+	role    events.Roles
 }
 
-func NewHandlers(echo *echo.Echo, c *nats.EncodedConn, user *events.User, company *events.Company) *Handlers {
+func NewHandlers(gin *gin.Engine,
+	c *nats.EncodedConn,
+	user *events.User,
+	company *events.Company,
+	role *events.Role,
+) *Handlers {
 	return &Handlers{
-		e:       echo,
+		g:       gin,
 		conn:    c,
 		user:    user,
 		company: company,
+		role:    role,
 	}
 }
 
 func (h *Handlers) All() {
 	// grougs
-	user := h.e.Group("/users")
-	company := h.e.Group("/companies")
+	user := h.g.Group("/users")
+	company := h.g.Group("/companies")
+	role := h.g.Group("/roles")
 	// user endpoints
 	user.POST("/", h.userCreate)
 	user.GET("/id/:id", h.userReadById)
@@ -41,4 +49,10 @@ func (h *Handlers) All() {
 	company.GET("/", h.companyReadAll)
 	company.PUT("/", h.companyUpdate)
 	company.DELETE("/:id", h.companyDelete)
+	// role endpoints
+	role.POST("/", h.roleCreate)
+	role.GET("/id/:id", h.roleReadById)
+	role.GET("/name/:name", h.roleReadByName)
+	role.PUT("/", h.roleUpdate)
+	role.DELETE("/:id", h.roleDelete)
 }

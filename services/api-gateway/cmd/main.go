@@ -1,12 +1,11 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/labstack/gommon/log"
 	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/api-gateway/config"
 	"github.com/mkskstpck/to-rename/services/api-gateway/events"
-	validator "github.com/mkskstpck/to-rename/services/api-gateway/handlers/validators"
 	handlers "github.com/mkskstpck/to-rename/services/api-gateway/handlers/web"
 )
 
@@ -21,15 +20,15 @@ func main() {
 	}
 
 	// starts echo
-	e := echo.New()
-	e.Validator = validator.NewCustomeValidator()
+	r := gin.Default()
 	userEvent := events.NewUserEvent(c)
 	companyEvent := events.NewCompanyEvent(c)
+	roleEvent := events.NewRoleEvent(c)
 	handlers.NewHandlers(
-		e,
+		r,
 		c,
 		userEvent,
-		companyEvent).All()
-	e.Logger.SetLevel(log.DEBUG)
-	e.Logger.Fatal(e.Start(config.EchoUrl))
+		companyEvent,
+		roleEvent).All()
+	r.Run(config.EchoUrl)
 }
