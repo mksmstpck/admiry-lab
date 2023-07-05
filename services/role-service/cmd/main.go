@@ -44,7 +44,7 @@ func main() {
 	role := database.NewRoleDB(db)
 	handlers.NewHandler(c, role, ccache).HandleAll()
 
-	log.Info("company-service is running")
+	log.Info("role-service is running")
 
 	<-make(chan int)
 }
