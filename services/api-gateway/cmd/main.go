@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/conectors"
-	"github.com/mkskstpck/to-rename/services/api-gateway/config"
-	"github.com/mkskstpck/to-rename/services/api-gateway/events"
-	"github.com/mkskstpck/to-rename/services/api-gateway/handlers"
+	"github.com/mkskstpck/admiry-lab/pkg/conectors"
+	"github.com/mkskstpck/admiry-lab/services/api-gateway/config"
+	"github.com/mkskstpck/admiry-lab/services/api-gateway/events"
+	"github.com/mkskstpck/admiry-lab/services/api-gateway/handlers"
 )
 
 func main() {

@@ -4,10 +4,10 @@ import (
 	"time"
 
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/conectors"
-	"github.com/mkskstpck/to-rename/services/company-service/config"
-	"github.com/mkskstpck/to-rename/services/company-service/database"
-	"github.com/mkskstpck/to-rename/services/company-service/handlers"
+	"github.com/mkskstpck/admiry-lab/pkg/conectors"
+	"github.com/mkskstpck/admiry-lab/services/company-service/config"
+	"github.com/mkskstpck/admiry-lab/services/company-service/database"
+	"github.com/mkskstpck/admiry-lab/services/company-service/handlers"
 )
 
 func main() {

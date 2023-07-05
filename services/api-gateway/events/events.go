@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/nats-io/nats.go"
 	"github.com/pborman/uuid"
 )

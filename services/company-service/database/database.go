@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/pborman/uuid"
 	"github.com/uptrace/bun"
 )

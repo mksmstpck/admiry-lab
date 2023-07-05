@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/models"
-	"github.com/mkskstpck/to-rename/pkg/utils"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/utils"
 	"github.com/pborman/uuid"
 )
 

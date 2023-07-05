@@ -4,10 +4,10 @@ import (
 	"time"
 
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/conectors"
-	"github.com/mkskstpck/to-rename/services/role-service/config"
-	"github.com/mkskstpck/to-rename/services/role-service/database"
-	"github.com/mkskstpck/to-rename/services/role-service/handlers"
+	"github.com/mkskstpck/admiry-lab/pkg/conectors"
+	"github.com/mkskstpck/admiry-lab/services/role-service/config"
+	"github.com/mkskstpck/admiry-lab/services/role-service/database"
+	"github.com/mkskstpck/admiry-lab/services/role-service/handlers"
 )
 
 func main() {

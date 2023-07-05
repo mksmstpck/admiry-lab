@@ -1,4 +1,4 @@
-module github.com/mkskstpck/to-rename
+module github.com/mkskstpck/admiry-lab
 
 go 1.20
 

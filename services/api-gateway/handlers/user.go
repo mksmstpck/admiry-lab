@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/pborman/uuid"
 )
 
