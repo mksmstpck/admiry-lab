@@ -43,6 +43,7 @@ func (d *RoleDB) RoleFindOneByName(name string) (models.Role, int32, error) {
 func (d *RoleDB) RoleCreateOne(role models.Role) (int32, error) {
 	_, err := d.database.NewInsert().Model(&role).Exec(context.Background())
 	if err != nil {
+		log.Print(role)
 		log.Error("database: ", err)
 		return 500, err
 	}
