@@ -6,7 +6,7 @@ import (
 	"github.com/mkskstpck/to-rename/pkg/conectors"
 	"github.com/mkskstpck/to-rename/services/api-gateway/config"
 	"github.com/mkskstpck/to-rename/services/api-gateway/events"
-	handlers "github.com/mkskstpck/to-rename/services/api-gateway/handlers/web"
+	"github.com/mkskstpck/to-rename/services/api-gateway/handlers"
 )
 
 func main() {
@@ -14,21 +14,21 @@ func main() {
 	config := config.NewConfig()
 
 	// nats connection
-	c, err := conectors.NewNats(config.NatsUrl)
+	conn, err := conectors.NewNats(config.NatsUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// starts echo
-	r := gin.Default()
-	userEvent := events.NewUserEvent(c)
-	companyEvent := events.NewCompanyEvent(c)
-	roleEvent := events.NewRoleEvent(c)
+	// starts gin
+	router := gin.Default()
+	userEvent := events.NewUserEvent(conn)
+	companyEvent := events.NewCompanyEvent(conn)
+	roleEvent := events.NewRoleEvent(conn)
 	handlers.NewHandlers(
-		r,
-		c,
+		router,
+		conn,
 		userEvent,
 		companyEvent,
 		roleEvent).All()
-	r.Run(config.EchoUrl)
+	router.Run(config.EchoUrl)
 }
