@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"github.com/labstack/gommon/log"
-	"github.com/mkskstpck/to-rename/pkg/models"
-	"github.com/mkskstpck/to-rename/pkg/services"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/utils"
 	"github.com/pborman/uuid"
 )
 
@@ -70,7 +70,7 @@ func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, err
 }
 
 func (d *UserDB) UserCreateOne(user models.User) (int32, error) {
-	user.Password = services.PasswordHash(user.Password)
+	user.Password = utils.PasswordHash(user.Password)
 	_, err := d.database.
 		NewInsert().
 		Model(&user).

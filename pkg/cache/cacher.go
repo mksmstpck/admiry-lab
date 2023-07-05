@@ -4,9 +4,25 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/redis/go-redis/v9"
 )
+
+func (c *Cacher) GetRole(key string, ctx context.Context) (interface{}, int32, error) {
+	var res models.Role
+	val, err := c.client.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return nil, 404, nil
+	}
+	if err != nil {
+		return nil, 500, err
+	}
+	err = json.Unmarshal([]byte(val), &res)
+	if err != nil {
+		return nil, 500, err
+	}
+	return res, 200, nil
+}
 
 func (c *Cacher) GetCompany(key string, ctx context.Context) (interface{}, int32, error) {
 	var res models.Company

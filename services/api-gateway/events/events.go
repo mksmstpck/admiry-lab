@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/mkskstpck/to-rename/pkg/models"
+	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/nats-io/nats.go"
 	"github.com/pborman/uuid"
 )
@@ -26,6 +26,16 @@ func NewCompanyEvent(conn *nats.EncodedConn) *Company {
 	}
 }
 
+type Role struct {
+	conn *nats.EncodedConn
+}
+
+func NewRoleEvent(conn *nats.EncodedConn) *Role {
+	return &Role{
+		conn: conn,
+	}
+}
+
 type Users interface {
 	UserGetByEmail(email string) (models.User, int32, error)
 	UserGetByUsername(username string) (models.User, int32, error)
@@ -42,4 +52,12 @@ type Companies interface {
 	CompanyPost(company *models.Company) (models.Company, int32, error)
 	CompanyPut(company *models.Company) (int32, error)
 	CompanyDelete(id uuid.UUID) (int32, error)
+}
+
+type Roles interface {
+	RoleGetById(id uuid.UUID) (models.Role, int32, error)
+	RoleGetByName(name string) (models.Role, int32, error)
+	RolePost(role *models.Role) (models.Role, int32, error)
+	RolePut(role *models.Role) (int32, error)
+	RoleDelete(id uuid.UUID) (int32, error)
 }

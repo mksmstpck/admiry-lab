@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/mkskstpck/to-rename/pkg/cache"
-	"github.com/mkskstpck/to-rename/services/user-service/database"
+	"github.com/mkskstpck/admiry-lab/pkg/cache"
+	"github.com/mkskstpck/admiry-lab/services/user-service/database"
 	"github.com/nats-io/nats.go"
 )
 

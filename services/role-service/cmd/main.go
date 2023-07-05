@@ -5,9 +5,9 @@ import (
 
 	"github.com/labstack/gommon/log"
 	"github.com/mkskstpck/admiry-lab/pkg/conectors"
-	"github.com/mkskstpck/admiry-lab/services/company-service/config"
-	"github.com/mkskstpck/admiry-lab/services/company-service/database"
-	"github.com/mkskstpck/admiry-lab/services/company-service/handlers"
+	"github.com/mkskstpck/admiry-lab/services/role-service/config"
+	"github.com/mkskstpck/admiry-lab/services/role-service/database"
+	"github.com/mkskstpck/admiry-lab/services/role-service/handlers"
 )
 
 func main() {
@@ -41,10 +41,10 @@ func main() {
 	)
 
 	// handle requests
-	company := database.NewCompanyDB(db)
-	handlers.NewHandler(c, company, ccache).HandleAll()
+	role := database.NewRoleDB(db)
+	handlers.NewHandler(c, role, ccache).HandleAll()
 
-	log.Info("company-service is running")
+	log.Info("role-service is running")
 
 	<-make(chan int)
 }

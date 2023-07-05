@@ -6,10 +6,10 @@ import (
 	"github.com/labstack/gommon/log"
 
 	_ "github.com/lib/pq"
-	"github.com/mkskstpck/to-rename/pkg/conectors"
-	"github.com/mkskstpck/to-rename/services/user-service/config"
-	"github.com/mkskstpck/to-rename/services/user-service/database"
-	"github.com/mkskstpck/to-rename/services/user-service/handlers"
+	"github.com/mkskstpck/admiry-lab/pkg/conectors"
+	"github.com/mkskstpck/admiry-lab/services/user-service/config"
+	"github.com/mkskstpck/admiry-lab/services/user-service/database"
+	"github.com/mkskstpck/admiry-lab/services/user-service/handlers"
 )
 
 func main() {

@@ -8,6 +8,7 @@ import (
 )
 
 type Cache interface {
+	GetRole(key string, ctx context.Context) (interface{}, int32, error)
 	GetCompany(key string, ctx context.Context) (interface{}, int32, error)
 	GetUser(key string, ctx context.Context) (interface{}, int32, error)
 	Set(key string, value interface{}, ctx context.Context) (int32, error)

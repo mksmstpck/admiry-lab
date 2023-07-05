@@ -15,11 +15,11 @@ tasks:
     cmds:
       - sudo docker compose build
   
-  build-and-up:
+  build-up:
     cmds:
       - sudo docker compose up --build -d
   
-  build-and-up-logs:
+  build-up-logs:
     cmds:
       - sudo docker compose up --build
 
@@ -36,6 +36,11 @@ tasks:
     cmds:
       - task: psql-migrate-company
       - task: psql-migrate-user
+      - task: psql-migrate-role
+
+  psql-migrate-role:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d role-services < sql/role-service/Role-migrate.sql
 
   psql-migrate-company:
     cmds:
@@ -49,6 +54,11 @@ tasks:
     cmds:
       - task: psql-drop-company
       - task: psql-drop-user
+      - task: psql-drop-role
+  
+  psql-drop-role:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d role-services < sql/role-service/Role-drop.sql
 
   psql-drop-company:
     cmds: 
