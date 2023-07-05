@@ -2,6 +2,6 @@ package models
 
 type Permission struct {
 	ID        int32    `json:"id"`
-	Name      string   `json:"name" validate:"required"`
-	AllowedTo []string `json:"allowedTo" validate:"required"`
+	Name      string   `json:"name" binding:"required"`
+	AllowedTo []string `json:"allowedTo" binding:"required"`
 }
