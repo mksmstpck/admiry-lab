@@ -8,6 +8,22 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+func (c *Cacher) GetPermission(key string, ctx context.Context) (interface{}, int32, error) {
+	var res models.Permission
+	val, err := c.client.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return nil, 404, nil
+	}
+	if err != nil {
+		return nil, 500, err
+	}
+	err = json.Unmarshal([]byte(val), &res)
+	if err != nil {
+		return nil, 500, err
+	}
+	return res, 200, nil
+}
+
 func (c *Cacher) GetRole(key string, ctx context.Context) (interface{}, int32, error) {
 	var res models.Role
 	val, err := c.client.Get(ctx, key).Result()
