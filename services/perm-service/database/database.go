@@ -17,10 +17,10 @@ func NewPermDB(database *bun.DB) *PermDB {
 }
 
 type Perms interface {
-	PermFindOneById(uuid.UUID) (models.Role, int32, error)
-	PermFindOneByName(string) (models.Role, int32, error)
-	PermCreateOne(models.Role) (int32, error)
-	PermUpdateOne(models.Role) (int32, error)
+	PermFindOneById(uuid.UUID) (models.Permission, int32, error)
+	PermFindOneByName(string) (models.Permission, int32, error)
+	PermCreateOne(models.Permission) (int32, error)
+	PermUpdateOne(models.Permission) (int32, error)
 	PermDeleteOne(uuid.UUID) (int32, error)
 }
 
