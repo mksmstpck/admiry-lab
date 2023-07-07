@@ -83,7 +83,7 @@ func (h *Handlers) companyUpdate(c *gin.Context) {
 		return
 	}
 	log.Info("handlers.companyUpdate: company updated")
-	c.JSON(http.StatusNoContent, "updated")
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func (h *Handlers) companyDelete(c *gin.Context) {
@@ -101,5 +101,5 @@ func (h *Handlers) companyDelete(c *gin.Context) {
 		return
 	}
 	log.Info("handlers.companyDelete: company deleted")
-	c.JSON(http.StatusNoContent, "deleted")
+	c.JSON(http.StatusNoContent, nil)
 }
