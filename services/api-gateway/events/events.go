@@ -36,6 +36,16 @@ func NewRoleEvent(conn *nats.EncodedConn) *Role {
 	}
 }
 
+type Perm struct {
+	conn *nats.EncodedConn
+}
+
+func NewPermEvent(conn *nats.EncodedConn) *Perm {
+	return &Perm{
+		conn: conn,
+	}
+}
+
 type Users interface {
 	UserGetByEmail(email string) (models.User, int32, error)
 	UserGetByUsername(username string) (models.User, int32, error)
@@ -60,4 +70,12 @@ type Roles interface {
 	RolePost(role *models.Role) (models.Role, int32, error)
 	RolePut(role *models.Role) (int32, error)
 	RoleDelete(id uuid.UUID) (int32, error)
+}
+
+type Perms interface {
+	PermGetById(id uuid.UUID) (models.Permission, int32, error)
+	PermGetByName(name string) (models.Permission, int32, error)
+	PermPost(perm *models.Permission) (models.Permission, int32, error)
+	PermPut(perm *models.Permission) (int32, error)
+	PermDelete(id uuid.UUID) (int32, error)
 }
