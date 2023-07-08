@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) permReadById() {
-	_, err := h.conn.Subscribe("perm-read-by-id", func(_, reply string, id uuid.UUID) {
+	_, err := h.conn.Subscribe("perm-get-by-id", func(_, reply string, id uuid.UUID) {
 		perm, code, err := h.cache.GetPermission(id.String(), context.Background())
 		if err == nil && perm != nil {
 			res := models.Response[models.Permission]{Status: code, Message: perm.(models.Permission)}
@@ -48,7 +48,7 @@ func (h *Handler) permReadById() {
 }
 
 func (h *Handler) permReadByName() {
-	_, err := h.conn.Subscribe("perm-read-by-name", func(_, reply string, name string) {
+	_, err := h.conn.Subscribe("perm-get-by-name", func(_, reply string, name string) {
 		perm, code, err := h.cache.GetPermission(name, context.Background())
 		if err == nil && perm != nil {
 			res := models.Response[models.Permission]{Status: code, Message: perm.(models.Permission)}
@@ -89,10 +89,12 @@ func (h *Handler) permCreate() {
 	_, err := h.conn.Subscribe("perm-create", func(_, reply string, perm models.Permission) {
 		permExist, code, err := h.perm.PermFindOneByName(perm.Name)
 		if err != nil {
-			res := models.Response[models.Permission]{Status: code, Error: err.Error()}
-			utils.NatsPublishError(h.conn.Publish(reply, res))
-			log.Info("handlers: ", err)
-			return
+			if err.Error() != "permission not found" {
+				res := models.Response[models.Permission]{Status: code, Error: err.Error()}
+				utils.NatsPublishError(h.conn.Publish(reply, res))
+				log.Info("handlers: ", err)
+				return
+			}
 		}
 		if permExist.ID != nil {
 			res := models.Response[models.Permission]{Status: 409, Error: "permission already exists"}
@@ -132,20 +134,7 @@ func (h *Handler) permCreate() {
 
 func (h *Handler) permUpdate() {
 	_, err := h.conn.Subscribe("perm-update", func(_, reply string, perm models.Permission) {
-		permExist, code, err := h.perm.PermFindOneByName(perm.Name)
-		if err != nil {
-			res := models.Response[string]{Status: code, Error: err.Error()}
-			utils.NatsPublishError(h.conn.Publish(reply, res))
-			log.Info("handlers: ", err)
-			return
-		}
-		if permExist.ID == nil {
-			res := models.Response[string]{Status: 404, Error: "permission not found"}
-			utils.NatsPublishError(h.conn.Publish(reply, res))
-			log.Info("handlers: perm not found")
-			return
-		}
-		code, err = h.perm.PermUpdateOne(perm)
+		code, err := h.perm.PermUpdateOne(perm)
 		if err != nil {
 			res := models.Response[string]{Status: code, Error: err.Error()}
 			utils.NatsPublishError(h.conn.Publish(reply, res))
@@ -176,8 +165,15 @@ func (h *Handler) permDelete() {
 			log.Info("handlers: ", err)
 			return
 		}
+		code, err = h.cache.Delete(id.String(), context.Background())
+		if err != nil {
+			res := models.Response[string]{Status: code, Error: err.Error()}
+			utils.NatsPublishError(h.conn.Publish(reply, res))
+			log.Error("handlers: ", err)
+		}
 		res := models.Response[string]{Status: code, Message: "permission deleted"}
 		utils.NatsPublishError(h.conn.Publish(reply, res))
+		log.Info("handlers: perm deleted")
 	})
 	if err != nil {
 		log.Error("handlers: ", err)
