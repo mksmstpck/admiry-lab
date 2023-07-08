@@ -24,11 +24,13 @@ func main() {
 	userEvent := events.NewUserEvent(conn)
 	companyEvent := events.NewCompanyEvent(conn)
 	roleEvent := events.NewRoleEvent(conn)
+	permEvent := events.NewPermEvent(conn)
 	handlers.NewHandlers(
 		router,
 		conn,
 		userEvent,
 		companyEvent,
-		roleEvent).All()
+		roleEvent,
+		permEvent).All()
 	router.Run(config.EchoUrl)
 }
