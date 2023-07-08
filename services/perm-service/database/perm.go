@@ -77,7 +77,16 @@ func (d *PermDB) PermUpdateOne(perm models.Permission) (int32, error) {
 		return 500, err
 	}
 	count, err := res.RowsAffected()
-	return int32(count), err
+	if err != nil {
+		log.Error("database: ", err)
+		return 500, err
+	}
+	if count == 0 {
+		log.Info("database: permission not found")
+		return 404, errors.New("permission not found")
+	}
+	log.Info("database: permission updated")
+	return 200, nil
 }
 
 func (d *PermDB) PermDeleteOne(id uuid.UUID) (int32, error) {
