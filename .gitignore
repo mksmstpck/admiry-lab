@@ -2,4 +2,5 @@ services/api-gateway/dev.env
 services/user-service/dev.env
 services/company-service/dev.env
 services/role-service/dev.env
+services/perm-service/dev.env
 .docker

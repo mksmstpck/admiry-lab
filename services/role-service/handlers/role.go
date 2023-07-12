@@ -71,7 +71,7 @@ func (h *Handler) roleReadByName() {
 		}
 		code, err = h.cache.Set(name, role, context.Background())
 		if err != nil {
-			res := models.Response[models.Role]{Status: 200, Error: err.Error()}
+			res := models.Response[models.Role]{Status: code, Error: err.Error()}
 			utils.NatsPublishError(h.conn.Publish(reply, res))
 			log.Info("handlers: ", err)
 			return

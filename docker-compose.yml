@@ -7,6 +7,23 @@ services:
       - "4222:4222"
       - "8222:8222"
 
+  perm-service:
+    env_file:
+      - ./services/perm-service/dev.env
+    links:
+      - nats
+      - db
+      - redis
+    depends_on:
+      - nats
+      - db
+      - redis
+    networks:
+      - default
+    build:
+      context: .
+      dockerfile: ./services/perm-service/Dockerfile
+
   role-service:
     env_file:
       - ./services/role-service/dev.env

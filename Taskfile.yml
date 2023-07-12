@@ -37,6 +37,11 @@ tasks:
       - task: psql-migrate-company
       - task: psql-migrate-user
       - task: psql-migrate-role
+      - task: psql-migrate-perm
+
+  psql-migrate-perm:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d perm-services < sql/perm-service/Perm-migrate.sql
 
   psql-migrate-role:
     cmds:
@@ -52,10 +57,15 @@ tasks:
 
   psql-drop:
     cmds:
+      - task: psql-drop-perm
       - task: psql-drop-company
       - task: psql-drop-user
       - task: psql-drop-role
   
+  psql-drop-perm:
+    cmds:
+      - sudo docker compose exec -T db psql -U postgres -d perm-services < sql/perm-service/Perm-drop.sql
+
   psql-drop-role:
     cmds:
       - sudo docker compose exec -T db psql -U postgres -d role-services < sql/role-service/Role-drop.sql

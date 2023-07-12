@@ -55,7 +55,7 @@ func (r Role) RolePost(role *models.Role) (models.Role, int32, error) {
 }
 
 func (r Role) RolePut(role *models.Role) (int32, error) {
-	var res models.Response[models.Role]
+	var res models.Response[string]
 	err := r.conn.Request("roles-put", role, &res, time.Second)
 	if err != nil {
 		log.Error("events.RolePut: ", err)

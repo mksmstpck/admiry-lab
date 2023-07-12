@@ -13,6 +13,7 @@ type Handlers struct {
 	user    events.Users
 	company events.Companies
 	role    events.Roles
+	perm    events.Perms
 }
 
 func NewHandlers(gin *gin.Engine,
@@ -20,6 +21,7 @@ func NewHandlers(gin *gin.Engine,
 	user *events.User,
 	company *events.Company,
 	role *events.Role,
+	perm *events.Perm,
 ) *Handlers {
 	return &Handlers{
 		g:       gin,
@@ -27,6 +29,7 @@ func NewHandlers(gin *gin.Engine,
 		user:    user,
 		company: company,
 		role:    role,
+		perm:    perm,
 	}
 }
 
@@ -35,6 +38,7 @@ func (h *Handlers) All() {
 	user := h.g.Group("/users")
 	company := h.g.Group("/companies")
 	role := h.g.Group("/roles")
+	perm := h.g.Group("/perms")
 	// user endpoints
 	user.POST("/", h.userCreate)
 	user.GET("/id/:id", h.userReadById)
@@ -55,4 +59,11 @@ func (h *Handlers) All() {
 	role.GET("/name/:name", h.roleReadByName)
 	role.PUT("/", h.roleUpdate)
 	role.DELETE("/:id", h.roleDelete)
+	// permission endpoints
+	perm.POST("/", h.permCreate)
+	perm.GET("/id/:id", h.permReadById)
+	perm.GET("/name/:name", h.permReadByName)
+	perm.GET("/", h.permReadAll)
+	perm.PUT("/", h.permUpdate)
+	perm.DELETE("/:id", h.permDelete)
 }

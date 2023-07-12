@@ -73,7 +73,7 @@ func (h *Handlers) roleUpdate(c *gin.Context) {
 		return
 	}
 	log.Info("handlers.roleUpdate: role updated")
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func (h *Handlers) roleDelete(c *gin.Context) {
@@ -85,5 +85,5 @@ func (h *Handlers) roleDelete(c *gin.Context) {
 		return
 	}
 	log.Info("handlers.roleDelete: role deleted")
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusNoContent, nil)
 }
