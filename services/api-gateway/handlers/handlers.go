@@ -63,6 +63,7 @@ func (h *Handlers) All() {
 	perm.POST("/", h.permCreate)
 	perm.GET("/id/:id", h.permReadById)
 	perm.GET("/name/:name", h.permReadByName)
+	perm.GET("/", h.permReadAll)
 	perm.PUT("/", h.permUpdate)
 	perm.DELETE("/:id", h.permDelete)
 }

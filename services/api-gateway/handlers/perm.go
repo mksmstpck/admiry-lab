@@ -37,6 +37,17 @@ func (h *Handlers) permReadByName(c *gin.Context) {
 	log.Info("handlers.permReadByName: perm found")
 }
 
+func (h *Handlers) permReadAll(c *gin.Context) {
+	p, code, err := h.perm.PermGetAll()
+	if err != nil {
+		c.JSON(int(code), models.Message{Message: err.Error()})
+		log.Error("handlers.permReadAll: ", err)
+		return
+	}
+	c.JSON(http.StatusOK, p)
+	log.Info("handlers.permReadAll: perm found")
+}
+
 func (h *Handlers) permCreate(c *gin.Context) {
 	perm := new(models.Permission)
 	if err := c.ShouldBind(&perm); err != nil {
