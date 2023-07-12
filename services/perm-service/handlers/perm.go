@@ -85,6 +85,28 @@ func (h *Handler) permReadByName() {
 	}
 }
 
+func (h *Handler) permReadAll() {
+	_, err := h.conn.Subscribe("perms-get-all", func(_, reply string, perms []models.Permission) {
+		perms, code, err := h.perm.PermFindAll()
+		if err != nil && perms != nil {
+			res := models.Response[[]models.Permission]{Status: code, Error: err.Error()}
+			utils.NatsPublishError(h.conn.Publish(reply, res))
+			log.Info("handlers: ", err)
+		}
+		if perms == nil {
+			res := models.Response[[]models.Permission]{Status: 404, Error: "permissions not found"}
+			utils.NatsPublishError(h.conn.Publish(reply, res))
+			log.Info("handlers: ", err)
+		}
+		res := models.Response[[]models.Permission]{Status: code, Message: perms}
+		utils.NatsPublishError(h.conn.Publish(reply, res))
+		log.Info("handlers: permissions found")
+	})
+	if err != nil {
+		log.Error("handlers: ", err)
+	}
+}
+
 func (h *Handler) permCreate() {
 	_, err := h.conn.Subscribe("perm-create", func(_, reply string, perm models.Permission) {
 		permExist, code, err := h.perm.PermFindOneByName(perm.Name)

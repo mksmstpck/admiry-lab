@@ -23,6 +23,7 @@ func NewHandler(conn *nats.EncodedConn, perm *database.PermDB, cache *cache.Cach
 func (h *Handler) HandleAll() {
 	h.permReadById()
 	h.permReadByName()
+	h.permReadAll()
 	h.permCreate()
 	h.permUpdate()
 	h.permDelete()
