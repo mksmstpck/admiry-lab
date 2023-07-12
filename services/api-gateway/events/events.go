@@ -75,6 +75,7 @@ type Roles interface {
 type Perms interface {
 	PermGetById(id uuid.UUID) (models.Permission, int32, error)
 	PermGetByName(name string) (models.Permission, int32, error)
+	PermGetAll() ([]models.Permission, int32, error)
 	PermPost(perm *models.Permission) (models.Permission, int32, error)
 	PermPut(perm *models.Permission) (int32, error)
 	PermDelete(id uuid.UUID) (int32, error)

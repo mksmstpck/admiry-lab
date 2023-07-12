@@ -39,6 +39,21 @@ func (p Perm) PermGetByName(name string) (models.Permission, int32, error) {
 	return res.Message, res.Status, nil
 }
 
+func (p Perm) PermGetAll() ([]models.Permission, int32, error) {
+	var res models.Response[[]models.Permission]
+	err := p.conn.Request("perms-get-all", nil, &res, time.Second)
+	if err != nil {
+		log.Error("events.PermFindAll: ", err)
+		return []models.Permission{}, 500, err
+	}
+	if res.Error != "" {
+		log.Error("events.PermFindAll: ", res.Error)
+		return []models.Permission{}, res.Status, errors.New(res.Error)
+	}
+	log.Info("events.PermFindAll: permissions found")
+	return res.Message, res.Status, nil
+}
+
 func (p Perm) PermPost(perm *models.Permission) (models.Permission, int32, error) {
 	var res models.Response[models.Permission]
 	err := p.conn.Request("perm-create", perm, &res, time.Second)
