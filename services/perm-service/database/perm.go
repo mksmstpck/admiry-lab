@@ -50,6 +50,21 @@ func (d *PermDB) PermFindOneByName(name string) (models.Permission, int32, error
 	return perm, 200, nil
 }
 
+func (d *PermDB) PermFindAll() ([]models.Permission, int32, error) {
+	perms := []models.Permission{}
+	err := d.
+		database.
+		NewSelect().
+		Model(&perms).
+		Scan(context.Background())
+	if err != nil {
+		log.Error("database: ", err)
+		return nil, 500, err
+	}
+	log.Info("database: permissions found")
+	return perms, 200, nil
+}
+
 func (d *PermDB) PermCreateOne(perm models.Permission) (int32, error) {
 	_, err := d.
 		database.
