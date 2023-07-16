@@ -15,22 +15,14 @@ type JWTs interface {
 	Validate(token string, public_key []byte) (uuid.UUID, error)
 }
 
-type JWT struct {
-	secret_key []byte
-	public_key []byte
+type JWT struct{}
+
+func NewJWT() *JWT {
+	return &JWT{}
 }
 
-func NewJWT(secret_key []byte, public_key []byte) *JWT {
-	return &JWT{
-		secret_key: secret_key,
-		public_key: public_key,
-	}
-}
-
-func (j *JWT) Create(ttl time.Duration, secret_key []byte, userID uuid.UUID) (string, error) {
-
+func (j JWT) Create(ttl time.Duration, secret_key []byte, userID uuid.UUID) (string, error) {
 	key, err := jwt.ParseRSAPrivateKeyFromPEM(secret_key)
-
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	now := time.Now().UTC()
@@ -49,8 +41,8 @@ func (j *JWT) Create(ttl time.Duration, secret_key []byte, userID uuid.UUID) (st
 	return tokenString, nil
 }
 
-func (j *JWT) Validate(token string, public_key []byte) (uuid.UUID, error) {
-	key, err := jwt.ParseRSAPublicKeyFromPEM(j.public_key)
+func (j JWT) Validate(token string, public_key []byte) (uuid.UUID, error) {
+	key, err := jwt.ParseRSAPublicKeyFromPEM(public_key)
 	if err != nil {
 		log.Error("utils.Validate: ", err)
 		return nil, err
