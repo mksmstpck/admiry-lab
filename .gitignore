@@ -4,3 +4,4 @@ services/company-service/dev.env
 services/role-service/dev.env
 services/perm-service/dev.env
 .docker
+RSA
