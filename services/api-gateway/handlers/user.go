@@ -9,6 +9,17 @@ import (
 	"github.com/pborman/uuid"
 )
 
+func (h *Handlers) userReadMe(c *gin.Context) {
+	user, exist := c.Get("User")
+	if !exist {
+		log.Info("handlers.userReadMe: user not found")
+		c.JSON(http.StatusNotFound, models.Message{Message: "user not found"})
+		return
+	}
+	log.Info("handlers.userReadMe: user found")
+	c.JSON(http.StatusOK, user)
+}
+
 func (h *Handlers) userReadById(c *gin.Context) {
 	id := c.Param("id")
 	UUID := uuid.Parse(id)
