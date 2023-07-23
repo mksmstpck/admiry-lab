@@ -54,6 +54,21 @@ func (u User) UserGetById(id uuid.UUID) (models.User, int32, error) {
 	return res.Message, res.Status, nil
 }
 
+func (u User) UserGetPasswordById(id uuid.UUID) (string, int32, error) {
+	var res models.Response[string]
+	err := u.conn.Request("users-password-get", id, &res, time.Second)
+	if err != nil {
+		log.Error("events.UserGetPasswordById: ", err)
+		return "", 500, err
+	}
+	if res.Error != "" {
+		log.Error("events.UserGetPasswordById: ", res.Error)
+		return "", res.Status, errors.New(res.Error)
+	}
+	log.Info("events.UserGetPasswordById: user found")
+	return res.Message, res.Status, nil
+}
+
 func (u User) UserPost(user *models.User) (models.User, int32, error) {
 	var res models.Response[models.User]
 	err := u.conn.Request("users-post", user, &res, time.Second)

@@ -69,6 +69,24 @@ func (d *UserDB) UserFindOneByUsername(username string) (models.User, int32, err
 	return user, 200, nil
 }
 
+func (d *UserDB) UserFindPasswordById(ID uuid.UUID) (string, int32, error) {
+	user := models.User{}
+	err := d.database.NewSelect().
+		Model(&user).
+		Where("id = ?", ID).
+		Scan(context.Background())
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Info("database: user not found by id")
+			return "", 404, errors.New("user not found")
+		}
+		log.Error("database: ", err)
+		return "", 500, err
+	}
+	log.Info("database: user found by id")
+	return user.Password, 200, nil
+}
+
 func (d *UserDB) UserCreateOne(user models.User) (int32, error) {
 	user.Password = utils.PasswordHash(user.Password)
 	_, err := d.database.

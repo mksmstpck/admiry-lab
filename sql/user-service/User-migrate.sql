@@ -6,6 +6,8 @@ create table if not exists "users" (
     full_name varchar(255) not null,
     email varchar(255) not null,
     password varchar(255) not null,
+    company_id uuid not null,
+    role_id uuid not null,
     primary key (id),
     unique(username, email)
     );

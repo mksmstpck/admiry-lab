@@ -50,6 +50,7 @@ type Users interface {
 	UserGetByEmail(email string) (models.User, int32, error)
 	UserGetByUsername(username string) (models.User, int32, error)
 	UserGetById(id uuid.UUID) (models.User, int32, error)
+	UserGetPasswordById(id uuid.UUID) (string, int32, error)
 	UserPost(user *models.User) (models.User, int32, error)
 	UserPut(user *models.User) (int32, error)
 	UserDelete(id uuid.UUID) (int32, error)

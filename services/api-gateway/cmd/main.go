@@ -31,6 +31,10 @@ func main() {
 		userEvent,
 		companyEvent,
 		roleEvent,
-		permEvent).All()
-	router.Run(config.EchoUrl)
+		permEvent,
+		config.Access_secret,
+		config.Refresh_secret,
+		config.Access_exp,
+		config.Refresh_exp).All()
+	router.Run(config.GinUrl)
 }
