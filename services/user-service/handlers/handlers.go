@@ -24,6 +24,7 @@ func (h *Handler) HandleAll() {
 	h.userReadById()
 	h.userReadByUsername()
 	h.userReadByEmail()
+	h.userReadPasswordById()
 	h.userCreate()
 	h.userUpdate()
 	h.userDelete()

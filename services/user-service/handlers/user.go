@@ -111,6 +111,23 @@ func (h *Handler) userReadByEmail() {
 	}
 }
 
+func (h *Handler) userReadPasswordById() {
+	_, err := h.conn.Subscribe("users-password-get", func(_, reply string, id uuid.UUID) {
+		password, code, err := h.user.UserFindPasswordById(id)
+		if err != nil {
+			res := models.Response[string]{Status: code, Error: err.Error()}
+			utils.NatsPublishError(h.conn.Publish(reply, res))
+			log.Error("handlers: ", err)
+		}
+		res := models.Response[string]{Status: 200, Message: password}
+		utils.NatsPublishError(h.conn.Publish(reply, res))
+		log.Info("handlers: user found by id")
+	})
+	if err != nil {
+		log.Error("handlers: ", err)
+	}
+}
+
 func (h *Handler) userCreate() {
 	_, err := h.conn.Subscribe("users-post", func(_, reply string, user models.User) {
 		userExistUsername, code, err := h.user.UserFindOneByUsername(user.Username)
