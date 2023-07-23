@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/labstack/gommon/log"
+	"github.com/mkskstpck/admiry-lab/pkg/jwt"
 	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/mkskstpck/admiry-lab/pkg/utils"
-	"github.com/mkskstpck/admiry-lab/services/api-gateway/jwt"
 )
 
 func (h *Handlers) logInByEmail(c *gin.Context) {

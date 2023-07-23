@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/mkskstpck/admiry-lab/pkg/jwt"
 	"github.com/mkskstpck/admiry-lab/pkg/models"
 	"github.com/mkskstpck/admiry-lab/services/api-gateway/events"
-	"github.com/mkskstpck/admiry-lab/services/api-gateway/jwt"
 )
 
 type Middleware struct {
